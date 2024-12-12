@@ -5,7 +5,7 @@ const Footer = () => {
     <footer className="bg-gray-800 text-white py-6 mt-10">
       <div className="container mx-auto text-center">
         <p className="text-sm">
-          &copy; {new Date().getFullYear()} FuturisticApp. All rights reserved.
+          &copy; {new Date().getFullYear()} Awash Insurnace. All rights reserved.
         </p>
         <div className="flex justify-center mt-4 space-x-4">
           <a
@@ -38,7 +38,7 @@ const Footer = () => {
           </a>
         </div>
         <div className="text-gray-500 text-xs mt-2">
-          Designed and Developed with ❤️ by YourName.
+          Designed and Developed with ❤️.
         </div>
       </div>
     </footer>
