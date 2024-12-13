@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -15,10 +14,8 @@ const Navbar = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  // Handle responsiveness: Desktop vs Mobile
   const handleResize = () => {
-    setIsDesktop(window.innerWidth >= 768);
-    if (window.innerWidth >= 768) setDropdownOpen(false); // Close dropdown if resizing back to desktop
+    if (window.innerWidth >= 768) setDropdownOpen(false);
   };
 
   useEffect(() => {
@@ -35,7 +32,7 @@ const Navbar = () => {
           Awash Insurance
         </div>
 
-        {/* Hamburger Icon (Always Responsive) */}
+        {/* Hamburger Icon for mobile responsiveness */}
         <button
           className="md:hidden px-2 py-1 text-gray-600 hover:text-blue-500"
           onClick={toggleDropdown}
@@ -57,15 +54,31 @@ const Navbar = () => {
           </svg>
         </button>
 
-        {/* Links Section - Always visible on Desktop */}
-        <ul className={`hidden md:flex md:space-x-6 font-medium`}>
-          <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">Home</li>
-          <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">About</li>
-          <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">Features</li>
-          <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">Contact</li>
+        {/* Desktop Menu Links */}
+        <ul className="hidden md:flex md:space-x-6 font-medium">
+          <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
+            <Link to="/" className="text-gray-800 dark:text-gray-200">
+              Home
+            </Link>
+          </li>
+          <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
+            <Link to="/about" className="text-gray-800 dark:text-gray-200">
+              About
+            </Link>
+          </li>
+          <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
+            <Link to="/features" className="text-gray-800 dark:text-gray-200">
+              Features
+            </Link>
+          </li>
+          <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
+            <Link to="/contact" className="text-gray-800 dark:text-gray-200">
+              Contact
+            </Link>
+          </li>
         </ul>
 
-        {/* Buttons Section - Styled Properly */}
+        {/* Action Buttons */}
         <div className="hidden md:flex items-center space-x-4 md:order-3">
           <button
             onClick={toggleDarkMode}
@@ -77,20 +90,45 @@ const Navbar = () => {
               <span role="img" aria-label="Dark mode">🌙</span>
             )}
           </button>
-          <Link to="/signin" className="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition">Sign In</Link>
-
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition">Sign Up</button>
+          <Link
+            to="/signin"
+            className="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition"
+          >
+            Sign In
+          </Link>
+          <Link
+            to="/signup"
+            className="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition"
+          >
+            Sign Up
+          </Link>
         </div>
       </div>
 
-      {/* Dropdown Menu Section for both Desktop and Mobile */}
+      {/* Dropdown Menu for Mobile Devices */}
       {dropdownOpen && (
-        <div className={`absolute top-14 left-0 w-full bg-white dark:bg-gray-700 shadow-lg rounded-lg py-2 px-4`}>
+        <div className="absolute top-14 left-0 w-full bg-white dark:bg-gray-700 shadow-lg rounded-lg py-2 px-4 md:hidden">
           <ul className="flex flex-col space-y-2 text-center md:space-y-0 md:flex-row md:space-x-6">
-            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">Home</li>
-            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">About</li>
-            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">Features</li>
-            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">Contact</li>
+            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
+              <Link to="/" className="text-gray-800 dark:text-gray-200">
+                Home
+              </Link>
+            </li>
+            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
+              <Link to="/about" className="text-gray-800 dark:text-gray-200">
+                About
+              </Link>
+            </li>
+            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
+              <Link to="/features" className="text-gray-800 dark:text-gray-200">
+                Features
+              </Link>
+            </li>
+            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
+              <Link to="/contact" className="text-gray-800 dark:text-gray-200">
+                Contact
+              </Link>
+            </li>
           </ul>
         </div>
       )}
@@ -99,4 +137,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
