@@ -1,44 +1,66 @@
 import React from "react";
+import { FaFacebookF, FaYoutube, FaInstagram, FaLinkedinIn, FaTwitter } from "react-icons/fa";
+import { SiTiktok } from "react-icons/si";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-6 mt-10">
-      <div className="container mx-auto text-center">
-        <p className="text-sm">
-          &copy; {new Date().getFullYear()} Awash Insurnace. All rights reserved.
+    <footer className="w-full bg-gray-800 text-white py-6 fixed bottom-0">
+      <div className="container mx-auto px-6 flex justify-between items-center">
+        {/* Company Name on the Bottom Left */}
+        <p className="text-sm font-medium">
+          © {new Date().getFullYear()} Awash Insurance. All rights reserved.
         </p>
-        <div className="flex justify-center mt-4 space-x-4">
+
+        {/* Social Media Icons on the Bottom Right */}
+        <div className="flex space-x-4">
           <a
-            href="#"
+            href="https://tiktok.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-gray-400 hover:text-white transition"
-            aria-label="Facebook"
           >
-            <i className="fab fa-facebook-f"></i> {/* Add a font-awesome icon or similar */}
+            <SiTiktok size={20} />
           </a>
           <a
-            href="#"
+            href="https://youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-gray-400 hover:text-white transition"
-            aria-label="Twitter"
           >
-            <i className="fab fa-twitter"></i>
+            <FaYoutube size={20} />
           </a>
           <a
-            href="#"
+            href="https://facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-gray-400 hover:text-white transition"
-            aria-label="Instagram"
           >
-            <i className="fab fa-instagram"></i>
+            <FaFacebookF size={20} />
           </a>
           <a
-            href="#"
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-gray-400 hover:text-white transition"
-            aria-label="LinkedIn"
           >
-            <i className="fab fa-linkedin-in"></i>
+            <FaInstagram size={20} />
           </a>
-        </div>
-        <div className="text-gray-500 text-xs mt-2">
-          Designed and Developed with ❤️.
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-white transition"
+          >
+            <FaLinkedinIn size={20} />
+          </a>
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-white transition"
+          >
+            <FaTwitter size={20} />
+          </a>
         </div>
       </div>
     </footer>
