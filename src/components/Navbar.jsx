@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -76,7 +77,8 @@ const Navbar = () => {
               <span role="img" aria-label="Dark mode">🌙</span>
             )}
           </button>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition">Sign In</button>
+          <Link to="/signin" className="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition">Sign In</Link>
+
           <button className="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition">Sign Up</button>
         </div>
       </div>
