@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <>
       {/* Main wrapper - spans entire page */}
-      <div className="w-screen flex flex-col min-h-screen bg-gray-100">
+      <div className="w-screen flex flex-col min-h-screen bg-gray-100 dark:text-gray-200">
         {/* Navbar */}
         <Navbar />
 

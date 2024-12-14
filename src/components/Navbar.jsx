@@ -66,6 +66,11 @@ const Navbar = () => {
               About
             </Link>
           </li>
+           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
+            <Link to="/about" className="text-gray-800 dark:text-gray-200">
+               Service 
+            </Link>
+          </li>
           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
             <Link to="/features" className="text-gray-800 dark:text-gray-200">
               Features
@@ -94,13 +99,13 @@ const Navbar = () => {
             to="/signin"
             className="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition"
           >
-            Sign In
+            Sign in
           </Link>
           <Link
             to="/signup"
             className="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition"
           >
-            Sign Up
+            Sign up
           </Link>
         </div>
       </div>
@@ -117,6 +122,11 @@ const Navbar = () => {
             <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
               <Link to="/about" className="text-gray-800 dark:text-gray-200">
                 About
+              </Link>
+            </li>
+            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
+              <Link to="/about" className="text-gray-800 dark:text-gray-200">
+               Service 
               </Link>
             </li>
             <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">

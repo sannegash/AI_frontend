@@ -4,7 +4,7 @@ import "../index.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-const SignUp = () => {
+const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -26,7 +26,7 @@ const SignUp = () => {
     console.log("Email:", email);
     console.log("Password:", password);
 
-    alert("Signed up successfully!");
+    alert("Signed in successfully!");
   };
 
   return (
@@ -34,10 +34,10 @@ const SignUp = () => {
       {/* Navbar */}
       <Navbar />
 
-      {/* Main Content - Sign Up Form */}
+      {/* Main Content - Sign In Form */}
       <main className="flex-1 bg-gray-50 flex items-center justify-center">
         <div className="bg-white shadow-md rounded-lg p-8 w-96">
-          <h1 className="text-2xl font-bold text-center mb-4 text-gray-700">Sign Up</h1>
+          <h1 className="text-2xl font-bold text-center mb-4 text-gray-700">Sign In</h1>
           {error && (
             <div className="text-red-500 text-sm mb-2 text-center">
               {error}
@@ -78,7 +78,7 @@ const SignUp = () => {
               type="submit"
               className="w-full bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 focus:outline-none transition"
             >
-              Sign Up
+              Sign In
             </button>
           </form>
 
@@ -87,7 +87,9 @@ const SignUp = () => {
 
           {/* Alternative Action */}
           <div className="text-sm text-center text-gray-600">
-            <p>Already have an account? <Link to="/signin" className="text-blue-500 hover:underline">Sign In</Link></p>
+            <p>
+              Don't have an account? <Link to="/signup" className="text-blue-500 hover:underline">Sign Up</Link>
+            </p>
           </div>
         </div>
       </main>
@@ -98,4 +100,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;
