@@ -32,9 +32,9 @@ const Home = () => {
         <Navbar />
 
         {/* Hero Section with full screen effect */}
-        <div className="bg-gradient-to-br from-blue-500 to-indigo-700 flex-grow text-white flex items-center justify-center w-full min-h-screen">
+        <div id="hero"className="bg-gradient-to-br from-blue-500 to-indigo-700 flex-grow text-white flex items-center justify-center w-full min-h-screen">
           {/* Hero Content */}
-          <header className="text-center mb-10 w-full px-4 md:px-20">
+          <header className="text-center w-full px-4 md:px-20">
             <h1 className="text-5xl font-bold mb-4">Welcome to Awash Insurance</h1>
             <p className="text-lg max-w-3xl mx-auto leading-tight">
               Your ultimate solution for managing your insurance needs with advanced technology and seamless experience.
@@ -43,8 +43,8 @@ const Home = () => {
         </div>
 
         {/* About Section */}
-        <div className="container mx-auto px-4 py-10 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 min-h-screen flex items-center justify-center">
-          <div className="text-center max-w-4xl mx-auto">
+        <div id="about" className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 min-h-screen flex items-center justify-center">
+          <div className="text-center max-w-4xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-4">About Awash Insurance</h2>
             <p className="text-lg leading-relaxed">
               Awash Insurance is leveraging cutting-edge AI technology to transform the way car insurance is priced. Using advanced predictive AI models, we analyze driver behavior, vehicle risk factors, and other data points to dynamically adjust customer car insurance rates.
@@ -56,8 +56,8 @@ const Home = () => {
         </div>
 
         {/* Services Section */}
-        <div className="container mx-auto px-4 py-10 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen flex items-center justify-center">
-          <div className="text-center max-w-4xl mx-auto">
+        <div id="services" className="w-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen flex items-center justify-center">
+          <div className="text-center max-w-4xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-6">Our Services</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Service 1 */}
@@ -86,8 +86,8 @@ const Home = () => {
         </div>
 
         {/* Features Section */}
-        <div className="container mx-auto px-4 py-10 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 min-h-screen flex items-center justify-center">
-          <div className="text-center max-w-4xl mx-auto">
+        <div id="features" className="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 min-h-screen flex items-center justify-center">
+          <div className="text-center max-w-4xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-6">Our Features</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Feature 1 */}
@@ -116,8 +116,8 @@ const Home = () => {
         </div>
 
         {/* Contact Us Section */}
-        <div className="container mx-auto px-4 py-10 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen flex items-center justify-center">
-          <div className="text-center max-w-4xl mx-auto">
+        <div id="contact" className="w-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen flex items-center justify-center">
+          <div className="text-center max-w-4xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-4">Contact Us</h2>
             <form className="max-w-lg mx-auto bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md w-full">
               {/* Name Field */}

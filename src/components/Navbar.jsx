@@ -30,28 +30,28 @@ const Navbar = ({ loggedInUser }) => {
         
         {/* Logo Text */}
         <div className="text-2xl font-bold text-gray-800 dark:text-gray-200 cursor-pointer">
-          Awash Insurance
+          {/* Link both 'Awash Insurance' and 'Home' to Hero section */}
+          <a href="#hero">Awash Insurance</a> {/* Link to Hero Section */}
         </div>
 
         {/* Desktop Menu Links */}
         <ul className="hidden md:flex md:space-x-6 font-medium">
           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-            <Link to="/" className="text-gray-800 dark:text-gray-200">Home</Link>
+            <a href="#hero" className="text-gray-800 dark:text-gray-200">Home</a>
           </li>
           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-            <Link to="/about" className="text-gray-800 dark:text-gray-200">About</Link>
+            <a href="#about" className="text-gray-800 dark:text-gray-200">About</a>
           </li>
           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-            <Link to="/service" className="text-gray-800 dark:text-gray-200">Service</Link>
+            <a href="#services" className="text-gray-800 dark:text-gray-200">Services</a>
           </li>
           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-            <Link to="/features" className="text-gray-800 dark:text-gray-200">Features</Link>
+            <a href="#features" className="text-gray-800 dark:text-gray-200">Features</a>
           </li>
           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-            <Link to="/contact" className="text-gray-800 dark:text-gray-200">Contact</Link>
+            <a href="#contact" className="text-gray-800 dark:text-gray-200">Contact</a>
           </li>
         </ul>
-
         {/* Right-side buttons */}
         <div className="hidden md:flex items-center space-x-4 md:order-3">
           <button
