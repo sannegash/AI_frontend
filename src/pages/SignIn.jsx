@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "../index.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -8,6 +9,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,10 +25,38 @@ const SignIn = () => {
     }
 
     setError("");
-    console.log("Email:", email);
-    console.log("Password:", password);
+    //send login data to backend API
+    axios
+    .post("http://127.0.0.1:8000/auth/users/login/", { email, password }) // Corrected endpoint
+    .then((response) => {
+      // Get token and user role from response (make sure your backend returns role)
+      const token = response.data.access; 
+      const role = response.data.role;  // Assuming the backend sends the role in the response
 
-    alert("Signed in successfully!");
+      // Store token and role in localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role);
+
+      // Show success alert
+      alert("Signed in successfully");
+
+      // Redirect based on user role
+      if (role === "cashier") {
+        history.push("/cashier-dashboard");
+      } else if (role === "underwriter") {
+        history.push("/underwriter-dashboard");
+      } else if (role === "claim_officer") {
+        history.push("/claim-officer-dashboard");
+      } else if (role === "customer") {
+        history.push("/customer-dashboard");
+      } else {
+        history.push("/general-dashboard"); // A fallback dashboard for other roles
+      }
+    })
+    .catch((err) => {
+      setError("Invalid credentials, please try again.");
+      console.error("Login error", err);
+    });
   };
 
   return (
