@@ -31,25 +31,37 @@ const Navbar = ({ loggedInUser }) => {
         {/* Logo Text */}
         <div className="text-2xl font-bold text-gray-800 dark:text-gray-200 cursor-pointer">
           {/* Link both 'Awash Insurance' and 'Home' to Hero section */}
-          <a href="#hero">Awash Insurance</a> {/* Link to Hero Section */}
+          <Link to="/" className="text-2xl font-bold text-gray-800 dark:text-gray-200">
+          Awash Insurance
+        </Link>
         </div>
 
         {/* Desktop Menu Links */}
         <ul className="hidden md:flex md:space-x-6 font-medium">
           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-            <a href="#hero" className="text-gray-800 dark:text-gray-200">Home</a>
+          <Link to="/" className="text-gray-800 dark:text-gray-200">
+            Home
+          </Link>
           </li>
           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-            <a href="#about" className="text-gray-800 dark:text-gray-200">About</a>
+          <Link to="#about" className="text-gray-800 dark:text-gray-200">
+            About 
+          </Link>
           </li>
           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-            <a href="#services" className="text-gray-800 dark:text-gray-200">Services</a>
+          <Link to="#services" className="text-gray-800 dark:text-gray-200">
+            Services 
+          </Link>
           </li>
           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-            <a href="#features" className="text-gray-800 dark:text-gray-200">Features</a>
+          <Link to="#features" className="text-gray-800 dark:text-gray-200">
+            Features  
+          </Link>
           </li>
           <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-            <a href="#contact" className="text-gray-800 dark:text-gray-200">Contact</a>
+          <Link to="#contact" className="text-gray-800 dark:text-gray-200">
+            Contact  
+          </Link>
           </li>
         </ul>
         {/* Right-side buttons */}
