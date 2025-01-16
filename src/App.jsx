@@ -13,6 +13,8 @@ import ProvideData from "./pages/ProvideData";
 import RequestUnderwriter from "./pages/RequestUnderwriter";
 import RiskAssessment from "./pages/RiskAssessment";
 import ViewClaimEstimate from "./pages/ViewClaimEstimate";
+import CustomerHome from "./pages/CustomerHome";
+
 function App() {
   return (
     <Router>
@@ -30,7 +32,7 @@ function App() {
         <Route path="/requestunderwriter" element={<RequestUnderwriter/>} />
         <Route path="/riskassesment" element={<RiskAssessment />} />
         <Route path="/viewclaimestimate" element={<ViewClaimEstimate/>} />
-        
+        <Route path="/customerhome" element={<CustomerHome />} />
       </Routes>
     </Router>
   );

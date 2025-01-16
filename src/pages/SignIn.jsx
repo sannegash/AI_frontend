@@ -32,6 +32,7 @@ const SignIn = () => {
         // Store token and role in localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
+        localStorage.setItem("username", username);
 
         // Show success alert
         alert("Signed in successfully");
@@ -46,7 +47,7 @@ const SignIn = () => {
         } else if (role === "customer") {
           navigate("/customer-dashboard");
         } else {
-          navigate("/general-dashboard"); // A fallback dashboard for other roles
+          navigate("/customerhome"); // A fallback dashboard for other roles
         }
       })
       .catch((err) => {
