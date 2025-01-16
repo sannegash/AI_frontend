@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 const SignIn = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate(); // Use useNavigate instead of useHistory
@@ -14,24 +14,19 @@ const SignIn = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!username || !password) {
       setError("Please fill in all fields");
-      return;
-    }
-
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError("Invalid email address");
       return;
     }
 
     setError("");
 
-    // Send login data to backend API
+    // Send login data to backend API using username and password
     axios
-      .post("http://127.0.0.1:8000/auth/users/login/", { email, password })
+      .post("http://127.0.0.1:8000/core/login/", { username, password })
       .then((response) => {
         // Get token and user role from response
-        const token = response.data.access;
+        const token = response.data.token;
         const role = response.data.role; // Assuming the backend sends the role in the response
 
         // Store token and role in localStorage
@@ -76,17 +71,17 @@ const SignIn = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email Input */}
+            {/* Username Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="email">
-                Email
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="username">
+                Username
               </label>
               <input
-                type="email"
-                id="email"
+                type="text"
+                id="username"
                 className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
 
@@ -132,3 +127,4 @@ const SignIn = () => {
 };
 
 export default SignIn;
+
