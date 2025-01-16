@@ -104,7 +104,7 @@ const Navbar = ({ loggedInUser }) => {
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 shadow-lg rounded-lg py-2">
                   <Link
-                    to="/account-management"
+                    to="/accountmanagement"
                     className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
                   >
                     Account Management
@@ -136,29 +136,6 @@ const Navbar = ({ loggedInUser }) => {
           )}
         </div>
       </div>
-
-      {/* Dropdown Menu for Mobile Devices */}
-      {dropdownOpen && (
-        <div className="absolute top-14 left-0 w-full bg-white dark:bg-gray-700 shadow-lg rounded-lg py-2 px-4 md:hidden">
-          <ul className="flex flex-col space-y-2 text-center md:space-y-0 md:flex-row md:space-x-6">
-            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-              <Link to="/" className="text-gray-800 dark:text-gray-200">Home</Link>
-            </li>
-            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-              <Link to="/about" className="text-gray-800 dark:text-gray-200">About</Link>
-            </li>
-            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-              <Link to="/service" className="text-gray-800 dark:text-gray-200">Service</Link>
-            </li>
-            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-              <Link to="/features" className="text-gray-800 dark:text-gray-200">Features</Link>
-            </li>
-            <li className="hover:text-blue-500 dark:hover:text-blue-300 cursor-pointer">
-              <Link to="/contact" className="text-gray-800 dark:text-gray-200">Contact</Link>
-            </li>
-          </ul>
-        </div>
-      )}
     </nav>
   );
 };

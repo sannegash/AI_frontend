@@ -5,7 +5,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import FileClaim from "./pages/FileClaim";
 import AccountManagment from "./pages/AccountManagment";
-import ApproveNewCustomer from "./pages/ApproveNewCustomer";
+import UnderwriterRequests from "./pages/UnderwriterRequests";
 import ClaimApproval from "./pages/ClaimApproval";
 import MakePayment from "./pages/MakePayment";
 import ProcessPayment from "./pages/ProcessPayments";
@@ -24,7 +24,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/fileclaim" element={<FileClaim />} />
         <Route path="/accountmanagment" element={<AccountManagment />} />
-        <Route path="/approvenewcustomer" element={<ApproveNewCustomer />} />
+        <Route path="/underwriterrequests" element={<UnderwriterRequests />} />
         <Route path="/claimapproval" element={<ClaimApproval />} />
         <Route path="/makepayment" element={<MakePayment />} />
         <Route path="/processpayment" element={<ProcessPayment />} />
