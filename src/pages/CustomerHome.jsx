@@ -15,7 +15,10 @@ const Sidebar = () => {
       >
         Request Underwriter
       </button>
-      <button className="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600">
+      <button 
+        className="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600"
+        onClick={()=> navigate ("/makepayment")} 
+      >
         Make Payment
       </button>
     </div>
