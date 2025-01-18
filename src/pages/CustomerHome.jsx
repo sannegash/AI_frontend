@@ -15,6 +15,12 @@ const Sidebar = () => {
       >
         Request Underwriter
       </button>
+      <button
+        className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
+        onClick={() => navigate("/FileClaim")}
+      >
+        FileClaim 
+      </button>
       <button 
         className="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600"
         onClick={()=> navigate ("/makepayment")} 
@@ -32,7 +38,9 @@ const CustomerHome = () => {
       <Navbar />
       <div className="flex flex-1">
         {/* Sidebar */}
-        <Sidebar />
+        <div className="w-64 h-full bg-gray-100 shadow-md">
+          <Sidebar />
+        </div>
         {/* Main Content */}
         <div className="flex-1 p-6">
           <h1 className="text-3xl font-bold mb-6 text-blue-700">Welcome to Awash Insurance</h1>
@@ -60,4 +68,3 @@ const CustomerHome = () => {
 };
 
 export default CustomerHome;
-
