@@ -14,7 +14,8 @@ import RequestUnderwriter from "./pages/RequestUnderwriter";
 import RiskAssessment from "./pages/RiskAssessment";
 import ViewClaimEstimate from "./pages/ViewClaimEstimate";
 import CustomerHome from "./pages/CustomerHome";
-
+import UnderwriterHome from "./pages/UnderwriterHome";
+import ClaimOfficerHome from "./pages/ClaimOfficerHome";
 function App() {
   return (
     <Router>
@@ -33,6 +34,8 @@ function App() {
         <Route path="/riskassesment" element={<RiskAssessment />} />
         <Route path="/viewclaimestimate" element={<ViewClaimEstimate/>} />
         <Route path="/customerhome" element={<CustomerHome />} />
+        <Route path="/underwriterhome" element={<UnderwriterHome />} />
+        <Route path="/claimofficerhome" element={<ClaimOfficerHome />} />
       </Routes>
     </Router>
   );
