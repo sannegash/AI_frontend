@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
@@ -17,6 +17,16 @@ import CustomerHome from "./pages/CustomerHome";
 import UnderwriterHome from "./pages/UnderwriterHome";
 import ClaimOfficerHome from "./pages/ClaimOfficerHome";
 function App() {
+  const [loggedInUser, setLoggedInUser] = useState(null);
+
+  // Check for the logged-in user from localStorage or another source
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    if (username) {
+      setLoggedInUser({ username }); // Assuming you're storing just the username for now
+    }
+  }, []);
+
   return (
     <Router>
       <Routes>

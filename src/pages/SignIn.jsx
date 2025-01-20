@@ -9,7 +9,7 @@ const SignIn = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Use useNavigate instead of useHistory
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,13 +19,12 @@ const SignIn = () => {
       return;
     }
 
-    setError("");
+    setError(""); // Clear previous error
 
     // Send login data to backend API using username and password
     axios
       .post("http://127.0.0.1:8000/core/login/", { username, password })
       .then((response) => {
-        // Get token and user role from response
         const token = response.data.token;
         const role = response.data.role; // Assuming the backend sends the role in the response
 
@@ -33,9 +32,6 @@ const SignIn = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
         localStorage.setItem("username", username);
-
-        // Show success alert
-        alert("Signed in successfully");
 
         // Redirect based on user role
         if (role === "cashier") {
@@ -47,7 +43,7 @@ const SignIn = () => {
         } else if (role === "customer") {
           navigate("/customer-dashboard");
         } else {
-          navigate("/customerhome"); // A fallback dashboard for other roles
+          navigate("/customerhome"); // Fallback dashboard for other roles
         }
       })
       .catch((err) => {
@@ -65,6 +61,8 @@ const SignIn = () => {
       <main className="flex-1 bg-gray-50 flex items-center justify-center">
         <div className="bg-white shadow-md rounded-lg p-8 w-96">
           <h1 className="text-2xl font-bold text-center mb-4 text-gray-700">Sign In</h1>
+          
+          {/* Error Message */}
           {error && (
             <div className="text-red-500 text-sm mb-2 text-center">
               {error}
@@ -128,4 +126,3 @@ const SignIn = () => {
 };
 
 export default SignIn;
-
