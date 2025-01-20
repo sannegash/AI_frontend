@@ -28,10 +28,10 @@ const SignIn = () => {
         const token = response.data.token;
         const role = response.data.role; // Assuming the backend sends the role in the response
 
-        // Store token and role in localStorage
-        localStorage.setItem("token", token);
-        localStorage.setItem("role", role);
-        localStorage.setItem("username", username);
+        // Store token and role in sessionStorage
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("role", role);
+        sessionStorage.setItem("username", username); // Use sessionStorage
 
         // Redirect based on user role
         if (role === "cashier") {
@@ -126,3 +126,4 @@ const SignIn = () => {
 };
 
 export default SignIn;
+
