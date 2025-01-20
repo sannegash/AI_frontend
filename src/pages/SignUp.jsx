@@ -13,6 +13,7 @@ const SignupForm = () => {
     birthDate: "",
     gender: "",
     password: "",
+    confirmPassword: "", // Added confirmPassword field
   });
   const [error, setError] = useState("");
   const navigate = useNavigate(); // Use navigate instead of history
@@ -28,11 +29,17 @@ const SignupForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { username, firstName, lastName, email, birthDate, gender, password } = formData;
+    const { username, firstName, lastName, email, birthDate, gender, password, confirmPassword } = formData;
     
     // Simple validation before submitting
-    if (!username || !firstName || !lastName || !email || !birthDate || !gender || !password) {
+    if (!username || !firstName || !lastName || !email || !birthDate || !gender || !password || !confirmPassword) {
       setError("Please fill out all fields before submitting.");
+      return;
+    }
+
+    // Check if password and confirm password match
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
 
@@ -47,7 +54,7 @@ const SignupForm = () => {
           email,
           birth_date: birthDate,
           gender,
-          password,
+          password, // Send only the password field, not confirmPassword
           role: "new_customer", // default role as new_customer
         }),
       });
@@ -191,6 +198,22 @@ const SignupForm = () => {
               />
             </div>
 
+            {/* Confirm Password */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="confirmPassword">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                className="border w-full px-4 py-2 rounded-md"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -208,3 +231,4 @@ const SignupForm = () => {
 };
 
 export default SignupForm;
+
