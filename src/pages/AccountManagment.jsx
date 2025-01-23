@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../index.css";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-
+import UserNavbar from "../components/Usernavbar";
 const AccountManagement = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -74,6 +73,7 @@ const AccountManagement = () => {
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-gray-100">
+      <UserNavbar />
       <div className="w-96 bg-white p-6 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-4">Account Management</h1>
         

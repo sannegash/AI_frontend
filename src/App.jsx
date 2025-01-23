@@ -21,25 +21,67 @@ import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRou
 
 function App() {
   return (
-    <AuthProvider>     
+    <AuthProvider>
       <Router>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/fileclaim" element={<FileClaim />} />
-          <Route path="/accountmanagment" element={<AccountManagment />} />
-          <Route path="/underwriterrequests" element={<UnderwriterRequests />} />
-          <Route path="/claimapproval" element={<ClaimApproval />} />
-          <Route path="/makepayment" element={<MakePayment />} />
-          <Route path="/processpayment" element={<ProcessPayment />} />
-          <Route path="/providedata" element={<ProvideData />} />
-          <Route path="/requestunderwriter" element={<RequestUnderwriter />} />
-          <Route path="/riskassesment" element={<RiskAssessment />} />
-          <Route path="/viewclaimestimate" element={<ViewClaimEstimate />} />
-          <Route path="/customerhome" element={<CustomerHome />} />
-          <Route path="/underwriterhome" element={<UnderwriterHome />} />
-          <Route path="/claimofficerhome" element={<ClaimOfficerHome />} />
+
+          {/* Protected Routes */}
+          <Route
+            path="/fileclaim"
+            element={<ProtectedRoute component={FileClaim} />}
+          />
+          <Route
+            path="/accountmanagement"
+            element={<ProtectedRoute component={AccountManagment} />}
+          />
+          <Route
+            path="/underwriterrequests"
+            element={<ProtectedRoute component={UnderwriterRequests} />}
+          />
+          <Route
+            path="/claimapproval"
+            element={<ProtectedRoute component={ClaimApproval} />}
+          />
+          <Route
+            path="/makepayment"
+            element={<ProtectedRoute component={MakePayment} />}
+          />
+          <Route
+            path="/processpayment"
+            element={<ProtectedRoute component={ProcessPayment} />}
+          />
+          <Route
+            path="/providedata"
+            element={<ProtectedRoute component={ProvideData} />}
+          />
+          <Route
+            path="/requestunderwriter"
+            element={<ProtectedRoute component={RequestUnderwriter} />}
+          />
+          <Route
+            path="/riskassesment"
+            element={<ProtectedRoute component={RiskAssessment} />}
+          />
+          <Route
+            path="/viewclaimestimate"
+            element={<ProtectedRoute component={ViewClaimEstimate} />}
+          />
+          <Route
+            path="/customerhome"
+            element={<ProtectedRoute component={CustomerHome} />}
+          />
+          <Route
+            path="/underwriterhome"
+            element={<ProtectedRoute component={UnderwriterHome} />}
+          />
+          <Route
+            path="/claimofficerhome"
+            element={<ProtectedRoute component={ClaimOfficerHome} />}
+          />
         </Routes>
       </Router>
     </AuthProvider>
@@ -47,4 +89,5 @@ function App() {
 }
 
 export default App;
+
 
