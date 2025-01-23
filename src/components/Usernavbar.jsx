@@ -11,10 +11,13 @@ const UserNavbar = () => {
   useEffect(() => {
     // Fetch user from sessionStorage
     const username = sessionStorage.getItem("username");
-    if (username) {
+    const token = sessionStorage.getItem("access_token"); // Fetch the access token from sessionStorage
+    if (username && token) {
       setLoggedInUser({ username }); // Set the logged-in user if available
     } else {
-      console.log("No username found in sessionStorage.");
+      console.log("No username or token found in sessionStorage.");
+      // Optionally, you can redirect to the sign-in page here
+      // window.location.href = "/signin"; 
     }
 
     // Check for dark mode preference from localStorage
@@ -51,7 +54,8 @@ const UserNavbar = () => {
   // Handle Sign Out
   const handleSignOut = () => {
     sessionStorage.removeItem("username");
-    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("access_token"); // Remove JWT access token
+    sessionStorage.removeItem("refresh_token"); // Remove refresh token
     window.location.reload(); // Redirect to home or login page
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../index.css";
@@ -11,6 +11,26 @@ const SignIn = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // Check if the user is already logged in
+  useEffect(() => {
+    const role = sessionStorage.getItem("role");
+    if (role) {
+      redirectBasedOnRole(role); // Redirect if already authenticated
+    }
+  }, []);
+
+  const redirectBasedOnRole = (role) => {
+    if (role === "cashier") {
+      navigate("/cashierhome");
+    } else if (role === "underwriter") {
+      navigate("/underwriterhome");
+    } else if (role === "claim_officer") {
+      navigate("/claimofficerhome");
+    } else if (role === "new_customer") {
+      navigate("/customerhome");
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -21,58 +41,46 @@ const SignIn = () => {
 
     setError(""); // Clear previous error
 
-    // Send login data to backend API using username and password
     axios
       .post("http://127.0.0.1:8000/core/login/", { username, password })
       .then((response) => {
-        const token = response.data.token;
-        const role = response.data.role; // Assuming the backend sends the role in the response
 
-        // Store token and role in sessionStorage
-        sessionStorage.setItem("token", token);
-        sessionStorage.setItem("role", role);
-        sessionStorage.setItem("username", username); // Use sessionStorage
+        const { access, refresh, role, username: returnedUsername } = response.data;
 
-        // Redirect based on user role
-        if (role === "cashier") {
-          navigate("/cashier-dashboard");
-        } else if (role === "underwriter") {
-          navigate("/underwriter-dashboard");
-        } else if (role === "claim_officer") {
-          navigate("/claim-officer-dashboard");
-        } else if (role === "customer") {
-          navigate("/customer-dashboard");
-        } else {
-          navigate("/customerhome"); // Fallback dashboard for other roles
-        }
+        console.log("Access Token:", access);  // Log access token to verify it's correct
+        console.log("Refresh Token:", refresh);  // Log refresh token to verify it's correct
+        console.log("Role:", role);  // Log the role to check its value
+        console.log("Username:", returnedUsername);  // Log the username to check its value
+        // Store the tokens and role in sessionStorage
+        sessionStorage.setItem("access", access); // Store access token
+        sessionStorage.setItem("refresh", refresh); // Store refresh token
+        sessionStorage.setItem("role", role); // Store user role
+        sessionStorage.setItem("username", username); // Store username
+
+        // Redirect based on the role
+        redirectBasedOnRole(role);
       })
       .catch((err) => {
+        console.error("Login error:", err.response?.data || err.message);
         setError("Invalid credentials, please try again.");
-        console.error("Login error", err);
       });
   };
 
   return (
     <div className="w-screen h-screen bg-gray-100 flex flex-col">
-      {/* Navbar */}
       <Navbar />
-
-      {/* Main Content - Sign In Form */}
       <main className="flex-1 bg-gray-50 flex items-center justify-center">
         <div className="bg-white shadow-md rounded-lg p-8 w-96">
           <h1 className="text-2xl font-bold text-center mb-4 text-gray-700">Sign In</h1>
-          
-          {/* Error Message */}
           {error && (
-            <div className="text-red-500 text-sm mb-2 text-center">
-              {error}
-            </div>
+            <div className="text-red-500 text-sm mb-2 text-center">{error}</div>
           )}
-
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Username Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="username">
+              <label
+                className="block text-sm font-medium text-gray-700 mb-1"
+                htmlFor="username"
+              >
                 Username
               </label>
               <input
@@ -83,10 +91,11 @@ const SignIn = () => {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-
-            {/* Password Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="password">
+              <label
+                className="block text-sm font-medium text-gray-700 mb-1"
+                htmlFor="password"
+              >
                 Password
               </label>
               <input
@@ -97,8 +106,6 @@ const SignIn = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 focus:outline-none transition"
@@ -106,24 +113,20 @@ const SignIn = () => {
               Sign In
             </button>
           </form>
-
-          {/* Divider */}
           <div className="my-4 border-t border-gray-300"></div>
-
-          {/* Alternative Action */}
           <div className="text-sm text-center text-gray-600">
             <p>
-              Don't have an account? <Link to="/signup" className="text-blue-500 hover:underline">Sign Up</Link>
+              Don't have an account?{" "}
+              <Link to="/signup" className="text-blue-500 hover:underline">
+                Sign Up
+              </Link>
             </p>
           </div>
         </div>
       </main>
-
-      {/* Footer */}
       <Footer />
     </div>
   );
 };
 
 export default SignIn;
-
