@@ -10,18 +10,17 @@ const UserNavbar = () => {
   const navigate = useNavigate(); // For navigation after sign-out
 
   useEffect(() => {
-    // Fetch username and tokens from sessionStorage
+    // Fetch role, username, and tokens from sessionStorage
     const username = sessionStorage.getItem("username");
+    const role = sessionStorage.getItem("role");  // Fetch the role (e.g., "customer", "underwriter", etc.)
     const accessToken = sessionStorage.getItem("access");
     const refreshToken = sessionStorage.getItem("refresh");
 
     // Check if any of the tokens are available
-    if (username && (accessToken || refreshToken)) {
-      setLoggedInUser({ username }); // Set the logged-in user if available
+    if (username && role && (accessToken || refreshToken)) {
+      setLoggedInUser({ username, role }); // Set the logged-in user with username and role
     } else {
-      console.log("No username or token found in sessionStorage.");
-      // Optionally, you can redirect to the sign-in page here
-      // window.location.href = "/signin"; 
+      console.log("No username, role, or token found in sessionStorage.");
     }
 
     // Check for dark mode preference from localStorage
@@ -66,14 +65,14 @@ const UserNavbar = () => {
 
   // Determine if the user is logged in and render the appropriate link
   const homeLink = loggedInUser ? (
-    // Redirect to the appropriate home page based on the user type
+    // Redirect to the appropriate home page based on the user role
     <Link
       to={
-        loggedInUser.username === "customer"
+        loggedInUser.role === "newcustomer"
           ? "/customerhome"
-          : loggedInUser.username === "underwriter"
+          : loggedInUser.role === "underwriter"
           ? "/underwriterhome"
-          : loggedInUser.username === "claimofficer"
+          : loggedInUser.role === "claimofficer"
           ? "/claimofficerhome"
           : "/"
       }

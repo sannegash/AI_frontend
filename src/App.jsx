@@ -18,6 +18,8 @@ import UnderwriterHome from "./pages/UnderwriterHome";
 import ClaimOfficerHome from "./pages/ClaimOfficerHome";
 import LoggedOutPage from "./pages/LoggedOutPage";
 import PrivateRoute from "./components/PrivateRoute";
+import CashierHome from "./pages/CashierHome";
+import NewCustomerData from "./pages/NewCustomerData";
 
 function App() {
   return (
@@ -30,6 +32,22 @@ function App() {
         <Route path="/logged-out" element={<LoggedOutPage />} />
 
         {/* Protected Routes */}
+        <Route
+          path="/NewCustomerData"
+          element={
+            <PrivateRoute>
+              <NewCustomerData />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/cashierhome"
+          element={
+            <PrivateRoute>
+              <CashierHome />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/fileclaim"
           element={

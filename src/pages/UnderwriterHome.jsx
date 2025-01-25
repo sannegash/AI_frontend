@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import UserNavbar from "../components/Usernavbar"; // Import UserNavbar
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -34,8 +35,8 @@ const Sidebar = () => {
 const UnderwriterHome = () => {
   return (
     <div className="w-screen h-screen bg-gray-100 flex flex-col">
-      {/* Navbar */}
-      <Navbar />
+      {/* User Navbar */}
+      <UserNavbar /> {/* Add UserNavbar here */}
       <div className="flex flex-1">
         {/* Sidebar */}
         <div className="w-64 h-full bg-gray-100 shadow-md">
@@ -68,4 +69,3 @@ const UnderwriterHome = () => {
 };
 
 export default UnderwriterHome;
-

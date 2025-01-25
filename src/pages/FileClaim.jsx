@@ -1,25 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Axios from "axios"; // Import Axios for API calls
 import Navbar from "../components/Navbar"; // Update the import path if needed
 import Footer from "../components/Footer"; // Update the import path if needed
 
 const FileClaim = () => {
-  const [selectedVehicle, setSelectedVehicle] = useState("");
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [formData, setFormData] = useState({
     description: "",
     accidentDate: "",
     location: "",
     policeReportNumber: "",
   });
-  const [vehicles, setVehicles] = useState([
-    { id: 1, name: "Toyota Corolla - ABC123" },
-    { id: 2, name: "Honda Civic - DEF456" },
-    { id: 3, name: "Ford Focus - GHI789" },
-  ]); // Replace with actual vehicle data fetched from your backend
+  const [vehicles, setVehicles] = useState([]); // Vehicles data from the backend
+  const [loading, setLoading] = useState(true); // Loading state for fetching vehicles
+
+  // Fetch vehicles data from the backend
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const response = await Axios.get("/api/vehicles"); // Replace with your actual API endpoint
+        setVehicles(response.data); // Set the vehicles data
+      } catch (error) {
+        console.error("Error fetching vehicles:", error);
+      } finally {
+        setLoading(false); // Stop loading once data is fetched
+      }
+    };
+
+    fetchVehicles();
+  }, []);
 
   const handleSelectVehicle = (vehicle) => {
     setSelectedVehicle(vehicle);
     setFormData({
-      ...formData,
       description: "",
       accidentDate: "",
       location: "",
@@ -56,21 +69,29 @@ const FileClaim = () => {
           </h1>
 
           {/* Vehicle Selection List */}
-          <div className="mb-4">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">Select a Vehicle</h2>
-            <ul className="space-y-2">
-              {vehicles.map((vehicle) => (
-                <li key={vehicle.id}>
-                  <button
-                    className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-2 hover:bg-blue-600"
-                    onClick={() => handleSelectVehicle(vehicle.name)}
-                  >
-                    {vehicle.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {loading ? (
+            <p>Loading vehicles...</p>
+          ) : (
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold text-gray-700 mb-2">Select a Vehicle</h2>
+              <ul className="space-y-2">
+                {vehicles.length > 0 ? (
+                  vehicles.map((vehicle) => (
+                    <li key={vehicle.id}>
+                      <button
+                        className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-2 hover:bg-blue-600"
+                        onClick={() => handleSelectVehicle(vehicle)}
+                      >
+                        {vehicle.name}
+                      </button>
+                    </li>
+                  ))
+                ) : (
+                  <li>No vehicles available</li>
+                )}
+              </ul>
+            </div>
+          )}
 
           {/* Claim Form (visible after vehicle selection) */}
           {selectedVehicle && (
@@ -147,7 +168,6 @@ const FileClaim = () => {
                   className="border w-full px-4 py-2 rounded-md"
                   value={formData.policeReportNumber}
                   onChange={handleChange}
-                  required
                 />
               </div>
 
@@ -170,4 +190,3 @@ const FileClaim = () => {
 };
 
 export default FileClaim;
-
