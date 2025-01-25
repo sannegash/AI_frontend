@@ -17,21 +17,28 @@ const SignIn = () => {
     if (role) {
       redirectBasedOnRole(role); // Redirect if already authenticated
     }
-  }, []);
+  }, []); // Empty dependency array ensures this only runs once after initial render
 
   const redirectBasedOnRole = (role) => {
-    if (role === "cashier") {
-      navigate("/cashierhome");
-    } else if (role === "underwriter") {
-      navigate("/underwriterhome");
-    } else if (role === "claim_officer") {
-      navigate("/claimofficerhome");
-    } else if (role === "new_customer") {
-      navigate("/customerhome");
+    switch (role) {
+      case "cashier":
+        navigate("/cashierhome");
+        break;
+      case "underwriter":
+        navigate("/underwriterhome");
+        break;
+      case "claim_officer":
+        navigate("/claimofficerhome");
+        break;
+      case "new_customer":
+        navigate("/customerhome");
+        break;
+      default:
+        navigate("/signin"); // Default to sign-in page for invalid roles
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!username || !password) {
@@ -41,29 +48,34 @@ const SignIn = () => {
 
     setError(""); // Clear previous error
 
-    axios
-      .post("http://127.0.0.1:8000/core/login/", { username, password })
-      .then((response) => {
-
-        const { access, refresh, role, username: returnedUsername } = response.data;
-
-        console.log("Access Token:", access);  // Log access token to verify it's correct
-        console.log("Refresh Token:", refresh);  // Log refresh token to verify it's correct
-        console.log("Role:", role);  // Log the role to check its value
-        console.log("Username:", returnedUsername);  // Log the username to check its value
-        // Store the tokens and role in sessionStorage
-        sessionStorage.setItem("access", access); // Store access token
-        sessionStorage.setItem("refresh", refresh); // Store refresh token
-        sessionStorage.setItem("role", role); // Store user role
-        sessionStorage.setItem("username", username); // Store username
-
-        // Redirect based on the role
-        redirectBasedOnRole(role);
-      })
-      .catch((err) => {
-        console.error("Login error:", err.response?.data || err.message);
-        setError("Invalid credentials, please try again.");
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/core/signin/", {
+        username,
+        password,
       });
+
+      const { access, refresh, user } = response.data;
+      const userRole = user?.role;
+      const returnedUsername = user?.username;
+
+      // Log to debug
+      console.log("Access Token:", access);
+      console.log("Refresh Token:", refresh);
+      console.log("Role:", userRole);
+      console.log("Username:", returnedUsername);
+
+      // Store data in sessionStorage
+      sessionStorage.setItem("access", access);
+      sessionStorage.setItem("refresh", refresh);
+      sessionStorage.setItem("role", userRole);
+      sessionStorage.setItem("username", returnedUsername);
+
+      // Redirect based on role
+      redirectBasedOnRole(userRole);
+    } catch (err) {
+      console.error("Login error:", err.response?.data || err.message);
+      setError("Invalid credentials, please try again.");
+    }
   };
 
   return (

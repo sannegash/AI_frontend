@@ -1,5 +1,4 @@
-// src/context/AuthContext.js
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 // Create a context to store authentication state
 const AuthContext = createContext();
@@ -9,13 +8,19 @@ export const useAuth = () => useContext(AuthContext);
 
 // AuthProvider component to provide the authentication context
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    localStorage.getItem("token") ? true : false
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const login = () => {
+  // Check if the token is already in localStorage and update the state
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  const login = (token) => {
     setIsAuthenticated(true);
-    localStorage.setItem("token", "your-auth-token"); // Replace with actual token
+    localStorage.setItem("token", token); // Save the actual token here
   };
 
   const logout = () => {
@@ -29,3 +34,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+

@@ -63,7 +63,7 @@ const SignupForm = () => {
 
       if (response.ok) {
         alert("Signup successful!");
-        navigate("/signup"); // Redirect to login page after successful signup
+        navigate("/signin"); // Redirect to login page after successful signup
       } else {
         setError(result.error || "Failed to sign up.");
       }

@@ -5,16 +5,16 @@ const ProtectedRoute = ({ allowedRoles }) => {
   const token = sessionStorage.getItem("token");
   const role = sessionStorage.getItem("role");
 
-  // Check if user is authenticated
+  // Check if user is authenticated (token is present)
   if (!token) {
     // Redirect to the sign-in page if not logged in
     return <Navigate to="/signin" replace />;
   }
 
-  // Check if user's role is allowed for the route
-  if (allowedRoles && !allowedRoles.includes(role)) {
+  // Check if role is missing or not allowed for the route
+  if (!role || (allowedRoles && !allowedRoles.includes(role))) {
     // Redirect to a generic dashboard or unauthorized page
-    return <Navigate to="/" replace />;
+    return <Navigate to="/unauthorized" replace />;
   }
 
   // Render the child routes if the user is authenticated and has permission
@@ -22,4 +22,3 @@ const ProtectedRoute = ({ allowedRoles }) => {
 };
 
 export default ProtectedRoute;
-
