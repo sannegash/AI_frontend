@@ -1,11 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext"; // Import your auth context
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import FileClaim from "./pages/FileClaim";
-import AccountManagment from "./pages/AccountManagment";
+import AccountManagement from "./pages/AccountManagment";
 import UnderwriterRequests from "./pages/UnderwriterRequests";
 import ClaimApproval from "./pages/ClaimApproval";
 import MakePayment from "./pages/MakePayment";
@@ -17,77 +16,127 @@ import ViewClaimEstimate from "./pages/ViewClaimEstimate";
 import CustomerHome from "./pages/CustomerHome";
 import UnderwriterHome from "./pages/UnderwriterHome";
 import ClaimOfficerHome from "./pages/ClaimOfficerHome";
-import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
+import LoggedOutPage from "./pages/LoggedOutPage";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/logged-out" element={<LoggedOutPage />} />
 
-          {/* Protected Routes */}
-          <Route
-            path="/fileclaim"
-            element={<ProtectedRoute component={FileClaim} />}
-          />
-          <Route
-            path="/accountmanagement"
-            element={<ProtectedRoute component={AccountManagment} />}
-          />
-          <Route
-            path="/underwriterrequests"
-            element={<ProtectedRoute component={UnderwriterRequests} />}
-          />
-          <Route
-            path="/claimapproval"
-            element={<ProtectedRoute component={ClaimApproval} />}
-          />
-          <Route
-            path="/makepayment"
-            element={<ProtectedRoute component={MakePayment} />}
-          />
-          <Route
-            path="/processpayment"
-            element={<ProtectedRoute component={ProcessPayment} />}
-          />
-          <Route
-            path="/providedata"
-            element={<ProtectedRoute component={ProvideData} />}
-          />
-          <Route
-            path="/requestunderwriter"
-            element={<ProtectedRoute component={RequestUnderwriter} />}
-          />
-          <Route
-            path="/riskassesment"
-            element={<ProtectedRoute component={RiskAssessment} />}
-          />
-          <Route
-            path="/viewclaimestimate"
-            element={<ProtectedRoute component={ViewClaimEstimate} />}
-          />
-          <Route
-            path="/customerhome"
-            element={<ProtectedRoute component={CustomerHome} />}
-          />
-          <Route
-            path="/underwriterhome"
-            element={<ProtectedRoute component={UnderwriterHome} />}
-          />
-          <Route
-            path="/claimofficerhome"
-            element={<ProtectedRoute component={ClaimOfficerHome} />}
-          />
-        </Routes>
-      </Router>
-    </AuthProvider>
+        {/* Protected Routes */}
+        <Route
+          path="/fileclaim"
+          element={
+            <PrivateRoute>
+              <FileClaim />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/accountmanagement"
+          element={
+            <PrivateRoute>
+              <AccountManagement />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/underwriterrequests"
+          element={
+            <PrivateRoute>
+              <UnderwriterRequests />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/claimapproval"
+          element={
+            <PrivateRoute>
+              <ClaimApproval />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/makepayment"
+          element={
+            <PrivateRoute>
+              <MakePayment />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/processpayment"
+          element={
+            <PrivateRoute>
+              <ProcessPayment />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/providedata"
+          element={
+            <PrivateRoute>
+              <ProvideData />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/requestunderwriter"
+          element={
+            <PrivateRoute>
+              <RequestUnderwriter />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/riskassesment"
+          element={
+            <PrivateRoute>
+              <RiskAssessment />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/viewclaimestimate"
+          element={
+            <PrivateRoute>
+              <ViewClaimEstimate />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/customerhome"
+          element={
+            <PrivateRoute>
+              <CustomerHome />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/underwriterhome"
+          element={
+            <PrivateRoute>
+              <UnderwriterHome />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/claimofficerhome"
+          element={
+            <PrivateRoute>
+              <ClaimOfficerHome />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
 export default App;
-
-

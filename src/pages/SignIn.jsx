@@ -9,15 +9,17 @@ const SignIn = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [redirected, setRedirected] = useState(false); // Track if redirected
   const navigate = useNavigate();
 
   // Check if the user is already logged in
   useEffect(() => {
     const role = sessionStorage.getItem("role");
-    if (role) {
+    if (role && !redirected) {
       redirectBasedOnRole(role); // Redirect if already authenticated
+      setRedirected(true); // Prevent further redirection
     }
-  }, []); // Empty dependency array ensures this only runs once after initial render
+  }, [redirected]); // Depend on redirected state to avoid infinite loop
 
   const redirectBasedOnRole = (role) => {
     switch (role) {
