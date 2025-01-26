@@ -1,4 +1,3 @@
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +11,7 @@ const Sidebar = () => {
       <h2 className="text-xl font-semibold mb-4">Menu</h2>
       <button
         className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/NewCustomerData")}
       >
         Request Underwriter
       </button>

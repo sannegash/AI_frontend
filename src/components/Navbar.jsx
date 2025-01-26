@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = ({ loggedInUser }) => {
   const [darkMode, setDarkMode] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const location = useLocation(); // Get the current location (route)
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -25,24 +26,22 @@ const Navbar = ({ loggedInUser }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Handle Sign Out
-  const handleSignOut = () => {
-    sessionStorage.removeItem("username");
-    sessionStorage.removeItem("authToken");
-    window.location.reload(); // Redirect to home or login page
+  // Handle Logo Click - Redirect to Home
+  const handleLogoClick = () => {
+    navigate("/");
   };
 
-  // Check if we are on the sign-in or sign-up page
   const isAuthPage = location.pathname === "/signin" || location.pathname === "/signup";
 
   return (
     <nav className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-md fixed top-0 w-full z-10">
-      {/* Navbar Container */}
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        
-        {/* Logo Text */}
-        <div className="text-2xl font-bold text-gray-800 dark:text-gray-200 cursor-pointer">
-          <Link to="/">Awash Insurance</Link>
+        {/* Logo */}
+        <div
+          onClick={handleLogoClick}
+          className="text-2xl font-bold text-gray-800 dark:text-gray-200 cursor-pointer"
+        >
+          Awash Insurance
         </div>
 
         {/* Desktop Menu Links */}
@@ -76,7 +75,7 @@ const Navbar = ({ loggedInUser }) => {
           </ul>
         )}
 
-        {/* Right-side buttons */}
+        {/* Right-Side Buttons */}
         <div className="hidden md:flex items-center space-x-4 md:order-3">
           <button
             onClick={toggleDarkMode}
@@ -89,18 +88,15 @@ const Navbar = ({ loggedInUser }) => {
             )}
           </button>
 
-          {/* If user is logged in, show username and avatar */}
           {loggedInUser ? (
             <div className="relative flex items-center space-x-2 cursor-pointer" onClick={toggleDropdown}>
               <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center bg-blue-500 text-white">
-                {/* Avatar emoji */}
                 <span className="text-lg">{loggedInUser.username[0]}</span>
               </div>
               <div className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                 {loggedInUser.username}
               </div>
 
-              {/* Dropdown Menu */}
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 shadow-lg rounded-lg py-2">
                   <Link
@@ -110,7 +106,10 @@ const Navbar = ({ loggedInUser }) => {
                     Account Management
                   </Link>
                   <button
-                    onClick={handleSignOut}
+                    onClick={() => {
+                      sessionStorage.clear();
+                      navigate("/signin");
+                    }}
                     className="w-full text-left px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600"
                   >
                     Sign Out
@@ -141,3 +140,4 @@ const Navbar = ({ loggedInUser }) => {
 };
 
 export default Navbar;
+

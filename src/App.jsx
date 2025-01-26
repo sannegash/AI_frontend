@@ -33,7 +33,7 @@ function App() {
 
         {/* Protected Routes */}
         <Route
-          path="/NewCustomerData"
+          path="/newcustomerdata"
           element={
             <PrivateRoute>
               <NewCustomerData />
@@ -113,7 +113,7 @@ function App() {
           }
         />
         <Route
-          path="/riskassesment"
+          path="/riskassessment"
           element={
             <PrivateRoute>
               <RiskAssessment />
@@ -158,3 +158,4 @@ function App() {
 }
 
 export default App;
+

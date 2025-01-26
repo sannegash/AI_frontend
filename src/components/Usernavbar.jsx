@@ -5,14 +5,14 @@ const UserNavbar = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
-  
+
   const location = useLocation(); // Get the current location (route)
   const navigate = useNavigate(); // For navigation after sign-out
 
   useEffect(() => {
     // Fetch role, username, and tokens from sessionStorage
     const username = sessionStorage.getItem("username");
-    const role = sessionStorage.getItem("role");  // Fetch the role (e.g., "customer", "underwriter", etc.)
+    const role = sessionStorage.getItem("role"); // Fetch the role (e.g., "customer", "underwriter", etc.)
     const accessToken = sessionStorage.getItem("access");
     const refreshToken = sessionStorage.getItem("refresh");
 
@@ -63,12 +63,11 @@ const UserNavbar = () => {
   // Check if we are on the sign-in or sign-up page
   const isAuthPage = location.pathname === "/signin" || location.pathname === "/signup";
 
-  // Determine if the user is logged in and render the appropriate link
+  // Home Link based on user role
   const homeLink = loggedInUser ? (
-    // Redirect to the appropriate home page based on the user role
     <Link
       to={
-        loggedInUser.role === "newcustomer"
+        loggedInUser.role === "new_customer"
           ? "/customerhome"
           : loggedInUser.role === "underwriter"
           ? "/underwriterhome"
@@ -81,7 +80,6 @@ const UserNavbar = () => {
       Awash Insurance
     </Link>
   ) : (
-    // If the user is not logged in, show the homepage link
     <Link
       to="/"
       className="text-2xl font-bold text-gray-800 dark:text-gray-200 cursor-pointer"
@@ -94,7 +92,6 @@ const UserNavbar = () => {
     <nav className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-md fixed top-0 w-full z-10">
       {/* Navbar Container */}
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        
         {/* Logo Text - Conditionally Rendered */}
         {homeLink}
 
@@ -151,3 +148,4 @@ const UserNavbar = () => {
 };
 
 export default UserNavbar;
+
