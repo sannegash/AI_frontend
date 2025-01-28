@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios"; // Import Axios for API calls
-import Navbar from "../components/Navbar"; // Update the import path if needed
 import Footer from "../components/Footer"; // Update the import path if needed
+import UserNavbar from "../components/Usernavbar";
 
 const FileClaim = () => {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
@@ -58,7 +58,7 @@ const FileClaim = () => {
   return (
     <div className="w-screen h-screen bg-gray-100 flex flex-col">
       {/* Navbar */}
-      <Navbar />
+      <UserNavbar />
 
       {/* Main Content */}
       <main className="flex-1 bg-gray-50 flex items-center justify-center">
