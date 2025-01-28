@@ -1,35 +1,39 @@
 import React, { useState, useEffect } from "react";
-import Axios from "axios"; // Import Axios for API calls
-import Footer from "../components/Footer"; // Update the import path if needed
-import UserNavbar from "../components/Usernavbar";
+import Axios from "axios"; // Axios for API calls
+import Footer from "../components/Footer"; // Footer component
+import UserNavbar from "../components/Usernavbar"; // Navbar component
 
 const FileClaim = () => {
-  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [selectedVehicle, setSelectedVehicle] = useState(null); // Selected vehicle
   const [formData, setFormData] = useState({
     description: "",
     accidentDate: "",
     location: "",
     policeReportNumber: "",
-  });
-  const [vehicles, setVehicles] = useState([]); // Vehicles data from the backend
-  const [loading, setLoading] = useState(true); // Loading state for fetching vehicles
+  }); // Form data
+  const [vehicles, setVehicles] = useState([]); // Vehicles fetched from the API
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
   // Fetch vehicles data from the backend
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
-        const response = await Axios.get("/api/vehicles"); // Replace with your actual API endpoint
-        setVehicles(response.data); // Set the vehicles data
+        setLoading(true); // Set loading to true before fetching
+        const response = await Axios.get("/api/vehicles"); // Replace with actual API endpoint
+        setVehicles(response.data?.data || []); // Adjust based on API structure
       } catch (error) {
         console.error("Error fetching vehicles:", error);
+        setError("Failed to load vehicles. Please try again.");
       } finally {
-        setLoading(false); // Stop loading once data is fetched
+        setLoading(false); // Stop loading
       }
     };
 
     fetchVehicles();
   }, []);
 
+  // Handle vehicle selection
   const handleSelectVehicle = (vehicle) => {
     setSelectedVehicle(vehicle);
     setFormData({
@@ -37,22 +41,48 @@ const FileClaim = () => {
       accidentDate: "",
       location: "",
       policeReportNumber: "",
-    }); // Reset the form when a new vehicle is selected
+    }); // Reset form data
   };
 
+  // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle the claim submission logic here
-    console.log({
-      selectedVehicle,
-      ...formData,
-    });
-    alert("Claim filed successfully!");
+    if (!selectedVehicle) {
+      alert("Please select a vehicle before filing a claim.");
+      return;
+    }
+
+    try {
+      // Example payload
+      const payload = {
+        vehicleId: selectedVehicle.id,
+        ...formData,
+      };
+
+      console.log("Submitting claim with payload:", payload);
+
+      // Make API request to file the claim (Replace with actual endpoint)
+      await Axios.post("/api/claims", payload);
+
+      alert("Claim filed successfully!");
+      // Reset state after submission
+      setSelectedVehicle(null);
+      setFormData({
+        description: "",
+        accidentDate: "",
+        location: "",
+        policeReportNumber: "",
+      });
+    } catch (error) {
+      console.error("Error submitting claim:", error);
+      alert("Failed to file claim. Please try again.");
+    }
   };
 
   return (
@@ -68,32 +98,36 @@ const FileClaim = () => {
             File a Claim
           </h1>
 
-          {/* Vehicle Selection List */}
+          {/* Vehicle Selection */}
           {loading ? (
             <p>Loading vehicles...</p>
-          ) : (
+          ) : error ? (
+            <p className="text-red-500 text-center">{error}</p>
+          ) : vehicles.length > 0 ? (
             <div className="mb-4">
               <h2 className="text-xl font-semibold text-gray-700 mb-2">Select a Vehicle</h2>
               <ul className="space-y-2">
-                {vehicles.length > 0 ? (
-                  vehicles.map((vehicle) => (
-                    <li key={vehicle.id}>
-                      <button
-                        className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-2 hover:bg-blue-600"
-                        onClick={() => handleSelectVehicle(vehicle)}
-                      >
-                        {vehicle.name}
-                      </button>
-                    </li>
-                  ))
-                ) : (
-                  <li>No vehicles available</li>
-                )}
+                {vehicles.map((vehicle) => (
+                  <li key={vehicle.id}>
+                    <button
+                      className={`w-full py-2 px-4 rounded mb-2 ${
+                        selectedVehicle?.id === vehicle.id
+                          ? "bg-green-500 text-white"
+                          : "bg-blue-500 text-white hover:bg-blue-600"
+                      }`}
+                      onClick={() => handleSelectVehicle(vehicle)}
+                    >
+                      {vehicle.name}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
+          ) : (
+            <p>No vehicles available.</p>
           )}
 
-          {/* Claim Form (visible after vehicle selection) */}
+          {/* Claim Form */}
           {selectedVehicle && (
             <form className="space-y-4" onSubmit={handleSubmit}>
               {/* Description */}
@@ -159,7 +193,7 @@ const FileClaim = () => {
                   className="block text-sm font-medium text-gray-700 mb-1"
                   htmlFor="policeReportNumber"
                 >
-                  Police Report Number
+                  Police Report Number (Optional)
                 </label>
                 <input
                   type="text"
