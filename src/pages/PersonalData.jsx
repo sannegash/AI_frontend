@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Use useNavigate from React Router v6
 import UserNavbar from "../components/Usernavbar";
+
 const PersonalData = () => {
     const [formData, setFormData] = useState({
         age: "",
@@ -69,183 +70,231 @@ const PersonalData = () => {
     };
 
     return (
-        <div className="container mx-auto p-6 bg-white shadow-lg rounded-lg max-w-lg">
+        <div className="w-screen h-screen bg-gray-100 flex flex-col">
             <UserNavbar />
-            <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Personal Data Submission</h1>
-            {error && (
-                <div className="bg-red-500 text-white p-2 rounded mb-4">
-                    {error}
-                </div>
-            )}
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSubmit(formData);
-                }}
-                className="space-y-4"
-            >
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">Age</label>
-                    <input
-                        type="number"
-                        name="age"
-                        value={formData.age}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+            <main className="flex-1 bg-gray-50 flex items-center justify-center">
+                <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-3xl">
+                    <h1 className="text-2xl font-bold text-center mb-4 text-gray-700">Personal Data Submission</h1>
+                    {error && (
+                        <div className="text-red-500 text-sm mb-2 text-center">{error}</div>
+                    )}
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleSubmit(formData);
+                        }}
+                        className="space-y-6"
+                    >
+                        {/* First row with two fields side by side */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="age">
+                                    Age
+                                </label>
+                                <input
+                                    type="number"
+                                    id="age"
+                                    name="age"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.age}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">Driving Experience (in years)</label>
-                    <input
-                        type="number"
-                        name="driving_experience"
-                        value={formData.driving_experience}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="driving_experience">
+                                    Driving Experience (in years)
+                                </label>
+                                <input
+                                    type="number"
+                                    id="driving_experience"
+                                    name="driving_experience"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.driving_experience}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
 
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">Education</label>
-                    <input
-                        type="text"
-                        name="education"
-                        value={formData.education}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+                        {/* Second row with two fields side by side */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="education">
+                                    Education
+                                </label>
+                                <input
+                                    type="text"
+                                    id="education"
+                                    name="education"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.education}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">Income</label>
-                    <input
-                        type="number"
-                        name="income"
-                        value={formData.income}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="income">
+                                    Income
+                                </label>
+                                <input
+                                    type="number"
+                                    id="income"
+                                    name="income"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.income}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
 
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">Owner Name</label>
-                    <input
-                        type="text"
-                        name="owner_name"
-                        value={formData.owner_name}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+                        {/* Third row with two fields side by side */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="owner_name">
+                                    Owner Name
+                                </label>
+                                <input
+                                    type="text"
+                                    id="owner_name"
+                                    name="owner_name"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.owner_name}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">Phone Number</label>
-                    <input
-                        type="tel"
-                        name="phone_number"
-                        value={formData.phone_number}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="phone_number">
+                                    Phone Number
+                                </label>
+                                <input
+                                    type="tel"
+                                    id="phone_number"
+                                    name="phone_number"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.phone_number}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
 
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">Postal Code</label>
-                    <input
-                        type="text"
-                        name="postal_code"
-                        value={formData.postal_code}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+                        {/* Address information */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="postal_code">
+                                    Postal Code
+                                </label>
+                                <input
+                                    type="text"
+                                    id="postal_code"
+                                    name="postal_code"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.postal_code}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">City</label>
-                    <input
-                        type="text"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="city">
+                                    City
+                                </label>
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.city}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
 
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">State</label>
-                    <input
-                        type="text"
-                        name="state"
-                        value={formData.state}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="state">
+                                    State
+                                </label>
+                                <input
+                                    type="text"
+                                    id="state"
+                                    name="state"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.state}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
-                <div className="form-group flex items-center">
-                    <input
-                        type="checkbox"
-                        name="married"
-                        checked={formData.married}
-                        onChange={handleChange}
-                        className="mr-2"
-                    />
-                    <label className="text-gray-700">Married</label>
-                </div>
+                            {/* Married checkbox */}
+                            <div className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    id="married"
+                                    name="married"
+                                    checked={formData.married}
+                                    onChange={handleChange}
+                                    className="mr-2"
+                                />
+                                <label className="text-sm text-gray-700" htmlFor="married">
+                                    Married
+                                </label>
+                            </div>
+                        </div>
 
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">Children</label>
-                    <input
-                        type="number"
-                        name="children"
-                        value={formData.children}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="children">
+                                    Children
+                                </label>
+                                <input
+                                    type="number"
+                                    id="children"
+                                    name="children"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.children}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">Traffic Violations</label>
-                    <input
-                        type="number"
-                        name="traffic_violations"
-                        value={formData.traffic_violations}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="traffic_violations">
+                                    Traffic Violations
+                                </label>
+                                <input
+                                    type="number"
+                                    id="traffic_violations"
+                                    name="traffic_violations"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.traffic_violations}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
 
-                <div className="form-group">
-                    <label className="block text-gray-700 font-medium">Number of Accidents</label>
-                    <input
-                        type="number"
-                        name="number_of_accidents"
-                        value={formData.number_of_accidents}
-                        onChange={handleChange}
-                        required
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="number_of_accidents">
+                                    Number of Accidents
+                                </label>
+                                <input
+                                    type="number"
+                                    id="number_of_accidents"
+                                    name="number_of_accidents"
+                                    className="border w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={formData.number_of_accidents}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
 
-                <button
-                    type="submit"
-                    className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                >
-                    Submit
-                </button>
-            </form>
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 focus:outline-none transition"
+                        >
+                            Submit
+                        </button>
+                    </form>
+                </div>
+            </main>
         </div>
     );
 };

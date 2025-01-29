@@ -6,7 +6,6 @@ import SignUp from "./pages/SignUp";
 import FileClaim from "./pages/FileClaim";
 import AccountManagement from "./pages/AccountManagment";
 import UnderwriterRequests from "./pages/UnderwriterRequests";
-import ClaimApproval from "./pages/ClaimApproval";
 import MakePayment from "./pages/MakePayment";
 import ProcessPayment from "./pages/ProcessPayments";
 import ProvideData from "./pages/ProvideData";
@@ -19,7 +18,6 @@ import ClaimOfficerHome from "./pages/ClaimOfficerHome";
 import LoggedOutPage from "./pages/LoggedOutPage";
 import PrivateRoute from "./components/PrivateRoute";
 import CashierHome from "./pages/CashierHome";
-import NewCustomerData from "./pages/NewCustomerData";
 import PersonalData  from "./pages/PersonalData";
 import VehicleData from "./pages/VehicleData";
 import DriverData from "./pages/DriverData";
@@ -58,14 +56,7 @@ function App() {
             </PrivateRoute>
           }
           />
-        <Route
-          path="/newcustomerdata"
-          element={
-            <PrivateRoute>
-              <NewCustomerData />
-            </PrivateRoute>
-          }
-        />
+        
         <Route
           path="/cashierhome"
           element={
@@ -98,14 +89,7 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/claimapproval"
-          element={
-            <PrivateRoute>
-              <ClaimApproval />
-            </PrivateRoute>
-          }
-        />
+        
         <Route
           path="/makepayment"
           element={

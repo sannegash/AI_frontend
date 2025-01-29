@@ -1,35 +1,7 @@
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Usernavbar";
 import Footer from "../components/Footer";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
-const Sidebar = () => {
-  const navigate = useNavigate();
-
-  return (
-    <div className="w-64 h-full bg-white shadow-md flex flex-col p-4">
-      <h2 className="text-xl font-semibold mb-4">Menu</h2>
-      <button
-        className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
-        onClick={() => navigate("/claims")}
-      >
-        Claims
-      </button>
-      <button
-        className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
-        onClick={() => navigate("/newcustomer")}
-      >
-        New Customer
-      </button>
-      <button 
-        className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
-        onClick={() => navigate("/riskassessment")} 
-      >
-        Risk Assessment
-      </button>
-    </div>
-  );
-};
 
 const ClaimOfficerHome = () => {
   return (
@@ -39,7 +11,6 @@ const ClaimOfficerHome = () => {
       <div className="flex flex-1">
         {/* Sidebar */}
         <div className="w-64 h-full bg-gray-100 shadow-md">
-          <Sidebar />
         </div>
         {/* Main Content */}
         <div className="flex-1 p-6">

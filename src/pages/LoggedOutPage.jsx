@@ -1,18 +1,27 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import UserNavbar from "../components/Usernavbar"; // Add UserNavbar for consistent navigation
 
 const LoggedOutPage = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-full bg-gray-100 dark:bg-gray-800">
-      <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-        You have successfully logged out.
-      </h1>
-      <Link
-        to="/signin"
-        className="mt-4 text-blue-500 dark:text-blue-300 hover:underline"
-      >
-        Click here to sign in again.
-      </Link>
+    <div className="w-screen h-screen bg-gray-100 flex flex-col">
+      <UserNavbar />
+      <main className="flex-1 bg-gray-50 flex items-center justify-center">
+        <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-3xl">
+          <h1 className="text-2xl font-bold text-center mb-4 text-gray-700">
+            You have successfully logged out.
+          </h1>
+          <p className="text-sm text-center text-gray-500 mb-4">
+            You have been logged out of your account.
+          </p>
+          <Link
+            to="/signin"
+            className="block text-center text-blue-500 hover:underline mb-4"
+          >
+            Click here to sign in again.
+          </Link>
+        </div>
+      </main>
     </div>
   );
 };
