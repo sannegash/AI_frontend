@@ -5,12 +5,6 @@ import UserNavbar from "../components/Usernavbar"; // Navbar component
 
 const FileClaim = () => {
   const [selectedVehicle, setSelectedVehicle] = useState(null); // Selected vehicle
-  const [formData, setFormData] = useState({
-    description: "",
-    accidentDate: "",
-    location: "",
-    policeReportNumber: "",
-  }); // Form data
   const [vehicles, setVehicles] = useState([]); // Vehicles fetched from the API
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
@@ -20,7 +14,7 @@ const FileClaim = () => {
     const fetchVehicles = async () => {
       try {
         setLoading(true); // Set loading to true before fetching
-        const response = await Axios.get("/api/vehicles"); // Replace with actual API endpoint
+        const response = await Axios.get("http://127.0.0.1:8000/vehicle/api/vehicle/"); // Replace with actual API endpoint
         setVehicles(response.data?.data || []); // Adjust based on API structure
       } catch (error) {
         console.error("Error fetching vehicles:", error);
@@ -36,53 +30,6 @@ const FileClaim = () => {
   // Handle vehicle selection
   const handleSelectVehicle = (vehicle) => {
     setSelectedVehicle(vehicle);
-    setFormData({
-      description: "",
-      accidentDate: "",
-      location: "",
-      policeReportNumber: "",
-    }); // Reset form data
-  };
-
-  // Handle form field changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedVehicle) {
-      alert("Please select a vehicle before filing a claim.");
-      return;
-    }
-
-    try {
-      // Example payload
-      const payload = {
-        vehicleId: selectedVehicle.id,
-        ...formData,
-      };
-
-      console.log("Submitting claim with payload:", payload);
-
-      // Make API request to file the claim (Replace with actual endpoint)
-      await Axios.post("/api/claims", payload);
-
-      alert("Claim filed successfully!");
-      // Reset state after submission
-      setSelectedVehicle(null);
-      setFormData({
-        description: "",
-        accidentDate: "",
-        location: "",
-        policeReportNumber: "",
-      });
-    } catch (error) {
-      console.error("Error submitting claim:", error);
-      alert("Failed to file claim. Please try again.");
-    }
   };
 
   return (
@@ -106,18 +53,31 @@ const FileClaim = () => {
           ) : vehicles.length > 0 ? (
             <div className="mb-4">
               <h2 className="text-xl font-semibold text-gray-700 mb-2">Select a Vehicle</h2>
-              <ul className="space-y-2">
+              <ul className="space-y-4">
                 {vehicles.map((vehicle) => (
-                  <li key={vehicle.id}>
+                  <li
+                    key={vehicle.id}
+                    className="bg-gray-200 rounded-md p-4 flex items-center justify-between"
+                  >
+                    <div className="flex items-center">
+                      {/* Render vehicle logo */}
+                      {vehicle.logo && (
+                        <img
+                          src={vehicle.logo}
+                          alt={`${vehicle.name} logo`}
+                          className="w-12 h-12 object-cover rounded-full mr-4"
+                        />
+                      )}
+                      <div>
+                        <h3 className="text-lg font-semibold">{vehicle.name}</h3>
+                        <p className="text-sm text-gray-600">{vehicle.description}</p>
+                      </div>
+                    </div>
                     <button
-                      className={`w-full py-2 px-4 rounded mb-2 ${
-                        selectedVehicle?.id === vehicle.id
-                          ? "bg-green-500 text-white"
-                          : "bg-blue-500 text-white hover:bg-blue-600"
-                      }`}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                       onClick={() => handleSelectVehicle(vehicle)}
                     >
-                      {vehicle.name}
+                      Select Vehicle
                     </button>
                   </li>
                 ))}
@@ -127,92 +87,22 @@ const FileClaim = () => {
             <p>No vehicles available.</p>
           )}
 
-          {/* Claim Form */}
+          {/* Display Selected Vehicle Information */}
           {selectedVehicle && (
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              {/* Description */}
-              <div>
-                <label
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                  htmlFor="description"
-                >
-                  Short Description of Accident
-                </label>
-                <textarea
-                  id="description"
-                  name="description"
-                  className="border w-full px-4 py-2 rounded-md"
-                  rows="3"
-                  value={formData.description}
-                  onChange={handleChange}
-                  required
-                ></textarea>
-              </div>
-
-              {/* Accident Date */}
-              <div>
-                <label
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                  htmlFor="accidentDate"
-                >
-                  Accident Date
-                </label>
-                <input
-                  type="date"
-                  id="accidentDate"
-                  name="accidentDate"
-                  className="border w-full px-4 py-2 rounded-md"
-                  value={formData.accidentDate}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {/* Location */}
-              <div>
-                <label
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                  htmlFor="location"
-                >
-                  Location of Accident
-                </label>
-                <input
-                  type="text"
-                  id="location"
-                  name="location"
-                  className="border w-full px-4 py-2 rounded-md"
-                  value={formData.location}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {/* Police Report Number */}
-              <div>
-                <label
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                  htmlFor="policeReportNumber"
-                >
-                  Police Report Number (Optional)
-                </label>
-                <input
-                  type="text"
-                  id="policeReportNumber"
-                  name="policeReportNumber"
-                  className="border w-full px-4 py-2 rounded-md"
-                  value={formData.policeReportNumber}
-                  onChange={handleChange}
-                />
-              </div>
-
-              {/* Submit Button */}
+            <div className="mt-6">
+              <h3 className="text-xl font-semibold text-gray-700">Selected Vehicle</h3>
+              <p><strong>Name:</strong> {selectedVehicle.name}</p>
+              <p><strong>Description:</strong> {selectedVehicle.description}</p>
+              <p><strong>License Number:</strong> {selectedVehicle.license_number}</p>
+              <p><strong>Driver:</strong> {selectedVehicle.driver_name}</p>
+              {/* Add more details as needed */}
               <button
-                type="submit"
-                className="w-full bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition"
+                className="mt-4 w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+                onClick={() => alert("Proceed to file the claim")}
               >
-                File Claim
+                File Claim on this Vehicle
               </button>
-            </form>
+            </div>
           )}
         </div>
       </main>

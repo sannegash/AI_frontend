@@ -20,7 +20,9 @@ import LoggedOutPage from "./pages/LoggedOutPage";
 import PrivateRoute from "./components/PrivateRoute";
 import CashierHome from "./pages/CashierHome";
 import NewCustomerData from "./pages/NewCustomerData";
-
+import PersonalData  from "./pages/PersonalData";
+import VehicleData from "./pages/VehicleData";
+import DriverData from "./pages/DriverData";
 function App() {
   return (
     <Router>
@@ -30,8 +32,32 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/logged-out" element={<LoggedOutPage />} />
-
         {/* Protected Routes */}
+        <Route
+          path="/PersonalData"
+          element={
+            <PrivateRoute>
+              <PersonalData/>
+            </PrivateRoute>
+          }
+        />
+        {/* Protected Routes */}
+        <Route
+          path="/DriverData"
+          element={
+            <PrivateRoute>
+              <DriverData/>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/VehicleData"
+          element={
+            <PrivateRoute>
+              <VehicleData/>
+            </PrivateRoute>
+          }
+          />
         <Route
           path="/newcustomerdata"
           element={

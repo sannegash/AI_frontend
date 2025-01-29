@@ -11,9 +11,21 @@ const Sidebar = () => {
       <h2 className="text-xl font-semibold mb-4">Menu</h2>
       <button
         className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
-        onClick={() => navigate("/NewCustomerData")}
+        onClick={() => navigate("/PersonalData")}
       >
-        Request Underwriter
+       Personal Data 
+      </button>
+      <button
+        className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
+        onClick={() => navigate("/VehicleData")}
+      >
+        Vehicle Data 
+      </button>
+      <button
+        className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
+        onClick={() => navigate("/DriverData")}
+      >
+        Driver Data 
       </button>
       <button
         className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
