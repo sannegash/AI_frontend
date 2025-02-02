@@ -20,50 +20,43 @@ const PersonalData = () => {
     number_of_accidents: 0,
   });
   const [error, setError] = useState("");
+  const [existingCustomer, setExistingCustomer] = useState(null);
   const navigate = useNavigate();
 
-  // Use your provided endpoint directly
   const endpoint = "http://127.0.0.1:8000/accounts/api/newcustomers/";
 
   // Fetch existing customer data when the component mounts
   useEffect(() => {
     const fetchCustomerData = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-        const response = await axios.get(endpoint, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        // If the API returns an array, we assume you want the first customer.
-        const customer = Array.isArray(response.data)
-          ? response.data[0]
-          : response.data;
-
-        // Update the form state with the existing data.
-        setFormData({
-          age: customer.age || "",
-          driving_experience: customer.driving_experience || "",
-          education: customer.education || "",
-          income: customer.income || "",
-          owner_name: customer.owner_name || "",
-          phone_number: customer.phone_number || "",
-          postal_code: customer.postal_code || "",
-          city: customer.city || "",
-          state: customer.state || "",
-          married: customer.married || false,
-          children: customer.children || 0,
-          traffic_violations: customer.traffic_violations || 0,
-          number_of_accidents: customer.number_of_accidents || 0,
-        });
+        const response = await axios.get(endpoint); // No auth token needed
+        if (response.data) {
+          setExistingCustomer(response.data); // Set customer data
+          setFormData({
+            age: response.data.age || "",
+            driving_experience: response.data.driving_experience || "",
+            education: response.data.education || "",
+            income: response.data.income || "",
+            owner_name: response.data.owner_name || "",
+            phone_number: response.data.phone_number || "",
+            postal_code: response.data.postal_code || "",
+            city: response.data.city || "",
+            state: response.data.state || "",
+            married: response.data.married || false,
+            children: response.data.children || 0,
+            traffic_violations: response.data.traffic_violations || 0,
+            number_of_accidents: response.data.number_of_accidents || 0,
+          });
+        }
       } catch (error) {
         console.error("Error fetching customer data:", error);
         setError("Failed to load customer data.");
       }
     };
-
+  
     fetchCustomerData();
-  }, [endpoint]);
+  }, []);
+  
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -87,14 +80,20 @@ const PersonalData = () => {
 
   const handleSubmit = async (data) => {
     try {
-      const token = localStorage.getItem("accessToken");
-      // Adjust the HTTP method if needed (POST, PUT, or PATCH)
-      const response = await axios.post(endpoint, data, {
+      const token = sessionStorage.getItem("access");
+
+      // If no existing customer, create new data
+      const method = existingCustomer ? "put" : "post";
+      const response = await axios({
+        method,
+        url: endpoint,
+        data,
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
+
       console.log("Success:", response.data);
       navigate("/success");
     } catch (error) {
@@ -113,6 +112,20 @@ const PersonalData = () => {
           </h1>
           {error && (
             <div className="text-red-500 text-sm mb-2 text-center">{error}</div>
+          )}
+          {existingCustomer ? (
+            <>
+              <h2 className="text-lg font-semibold mb-4">Existing Data</h2>
+              <p className="text-gray-700 mb-4">
+                Your existing personal data is already saved. You can update
+                your information below if needed.
+              </p>
+            </>
+          ) : (
+            <p className="text-gray-700 mb-4">
+              You haven't filled out the form yet. Please provide your personal
+              data below.
+            </p>
           )}
           <form
             onSubmit={(e) => {
@@ -354,7 +367,7 @@ const PersonalData = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 focus:outline-none transition"
+              className="w-full bg-blue-600 text-white px-4 py-2 rounded-md mt-4 hover:bg-blue-700"
             >
               Submit
             </button>
