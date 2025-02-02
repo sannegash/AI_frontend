@@ -128,7 +128,6 @@ const PersonalData = () => {
       });
 
       console.log("Success:", response.data);
-      navigate("/success");
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
       setError(error.response?.data || "An error occurred");
