@@ -21,6 +21,8 @@ import CashierHome from "./pages/CashierHome";
 import PersonalData  from "./pages/PersonalData";
 import VehicleData from "./pages/VehicleData";
 import DriverData from "./pages/DriverData";
+import Policy from "./pages/Policy";
+
 function App() {
   return (
     <Router>
@@ -36,6 +38,14 @@ function App() {
           element={
             <PrivateRoute>
               <PersonalData/>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/Policy"
+          element={
+            <PrivateRoute>
+              <Policy/>
             </PrivateRoute>
           }
         />

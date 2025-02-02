@@ -19,34 +19,61 @@ const PersonalData = () => {
     traffic_violations: 0,
     number_of_accidents: 0,
   });
+
   const [error, setError] = useState("");
   const [existingCustomer, setExistingCustomer] = useState(null);
   const navigate = useNavigate();
 
-  const endpoint = "http://127.0.0.1:8000/accounts/api/newcustomers/";
+  const endpoint = `http://127.0.0.1:8000/accounts/api/newcustomers/`;
 
   // Fetch existing customer data when the component mounts
   useEffect(() => {
     const fetchCustomerData = async () => {
       try {
-        const response = await axios.get(endpoint); // No auth token needed
-        if (response.data) {
-          setExistingCustomer(response.data); // Set customer data
-          setFormData({
-            age: response.data.age || "",
-            driving_experience: response.data.driving_experience || "",
-            education: response.data.education || "",
-            income: response.data.income || "",
-            owner_name: response.data.owner_name || "",
-            phone_number: response.data.phone_number || "",
-            postal_code: response.data.postal_code || "",
-            city: response.data.city || "",
-            state: response.data.state || "",
-            married: response.data.married || false,
-            children: response.data.children || 0,
-            traffic_violations: response.data.traffic_violations || 0,
-            number_of_accidents: response.data.number_of_accidents || 0,
-          });
+        const token = localStorage.getItem("access");
+        if (!token) {
+          setError("Authentication token not found.");
+          return;
+        }
+  
+        const response = await axios.get(endpoint, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        console.log("API Response Data:", response.data);
+  
+        if (response.data && response.data.length > 0) {
+          const customerData = response.data[0]; // Assume there's only one object for the logged-in user
+          setExistingCustomer(customerData);
+  
+          // Check if customer data contains valid values
+          const isDataComplete = Object.keys(customerData).every(
+            (key) => customerData[key] !== "" && customerData[key] !== null
+          );
+  
+          if (isDataComplete) {
+            // Data exists and is complete
+            setFormData({
+              age: customerData.age || "",
+              driving_experience: customerData.driving_experience || "",
+              education: customerData.education || "",
+              income: customerData.income || "",
+              owner_name: customerData.owner_name || "",
+              phone_number: customerData.phone_number || "",
+              postal_code: customerData.postal_code || "",
+              city: customerData.city || "",
+              state: customerData.state || "",
+              married: customerData.married || false,
+              children: customerData.children || 0,
+              traffic_violations: customerData.traffic_violations || 0,
+              number_of_accidents: customerData.number_of_accidents || 0,
+            });
+          } else {
+            // Data exists but is incomplete, you may want to show a message here
+            setError("Your personal data is incomplete. Please fill out the form to complete your profile.");
+          }
         }
       } catch (error) {
         console.error("Error fetching customer data:", error);
@@ -55,7 +82,7 @@ const PersonalData = () => {
     };
   
     fetchCustomerData();
-  }, []);
+  }, []); // Empty dependency array to run once when the component mounts
   
 
   const handleChange = (e) => {
@@ -78,16 +105,22 @@ const PersonalData = () => {
     }
   };
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async () => {
     try {
-      const token = sessionStorage.getItem("access");
+      const token = localStorage.getItem("access");
 
-      // If no existing customer, create new data
+      if (!token) {
+        setError("Authentication token not found.");
+        return;
+      }
+
       const method = existingCustomer ? "put" : "post";
+      const dataToSubmit = existingCustomer ? { ...formData } : formData; // If existing customer, send updated data
+
       const response = await axios({
         method,
         url: endpoint,
-        data,
+        data: dataToSubmit,
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -101,7 +134,7 @@ const PersonalData = () => {
       setError(error.response?.data || "An error occurred");
     }
   };
-
+  
   return (
     <div className="w-screen h-screen bg-gray-100 flex flex-col">
       <UserNavbar />

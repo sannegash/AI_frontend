@@ -72,6 +72,10 @@ const SignIn = () => {
       sessionStorage.setItem("role", userRole);
       sessionStorage.setItem("username", returnedUsername);
 
+      // Store access token in localStorage as well
+      localStorage.setItem("access", access);
+      localStorage.setItem("refresh", refresh);
+
       // Redirect based on role
       redirectBasedOnRole(userRole);
     } catch (err) {

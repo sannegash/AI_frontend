@@ -43,6 +43,7 @@ const UserNavbar = () => {
 
   const handleSignOut = () => {
     sessionStorage.clear();
+    localStorage.clear();
     navigate("/logged-out");
   };
 
