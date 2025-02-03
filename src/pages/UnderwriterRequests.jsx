@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 import UserNavbar from "../components/Usernavbar";
 import Footer from "../components/Footer";
 
@@ -13,7 +14,7 @@ const Sidebar = () => {
         className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
         onClick={() => navigate("/underwriterrequests")}
       >
-       Underwriter Request
+        Underwriter Request
       </button>
       <button
         className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
@@ -38,8 +39,8 @@ const UnderwriterRequests = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/newcustomer/");
-        setCustomers(response.data);
+        const response = await axios.get("http://127.0.0.1:8000/policies/create-policy/");
+        setCustomers(response.data.customers); // Extract customers from the response
       } catch (error) {
         console.error("Error fetching underwriting requests", error);
       }
@@ -49,14 +50,10 @@ const UnderwriterRequests = () => {
   }, []);
 
   const handleCustomerClick = async (customer) => {
-    try {
-      const vehicleResponse = await axios.get(
-        `http://127.0.0.1:8000/vehicle/api/vehicle/?customer_id=${customer.id}`
-      );
-      setSelectedCustomer({ ...customer, vehicles: vehicleResponse.data });
-    } catch (error) {
-      console.error("Error fetching vehicle data", error);
-    }
+    setSelectedCustomer(customer);  // Set the selected customer with their details
+
+    // Vehicles data is already in the customer object
+    // You don't need an additional API call to fetch vehicles
   };
 
   return (
@@ -81,25 +78,24 @@ const UnderwriterRequests = () => {
                     onClick={() => handleCustomerClick(customer)}
                   >
                     <span className="flex-1 text-black">
-                      {customer.customer_name} - {customer.age} years old
+                      {customer.name} - {customer.email}
+                    </span>
+                    <span className={`text-sm ${customer.status === "Rejected" ? "text-red-500" : customer.status === "New" ? "text-yellow-500" : "text-green-500"}`}>
+                      {customer.status}
                     </span>
                   </li>
                 ))}
               </ul>
             )}
           </div>
+
           {selectedCustomer && (
-            <div className="mt-8 p-6 bg-white shadow-lg rounded-lg">
+            <div className="mt-8 p-6 bg-white text-black shadow-lg rounded-lg">
               <h3 className="text-2xl font-semibold">Customer Details</h3>
-              <p><strong>Name:</strong> {selectedCustomer.customer_name}</p>
-              <p><strong>Age:</strong> {selectedCustomer.age}</p>
-              <p><strong>Driving Experience:</strong> {selectedCustomer.driving_experience} years</p>
-              <p><strong>Education:</strong> {selectedCustomer.education}</p>
-              <p><strong>Income:</strong> ${selectedCustomer.income}</p>
-              <p><strong>Married:</strong> {selectedCustomer.married ? "Yes" : "No"}</p>
-              <p><strong>Children:</strong> {selectedCustomer.children}</p>
-              <p><strong>Traffic Violations:</strong> {selectedCustomer.traffic_violations}</p>
-              <p><strong>Accidents:</strong> {selectedCustomer.number_of_accidents}</p>
+              <p><strong>Name:</strong> {selectedCustomer.name}</p>
+              <p><strong>Email:</strong> {selectedCustomer.email}</p>
+              <p><strong>Status:</strong> {selectedCustomer.status}</p>
+
               <section className="mt-6">
                 <h2 className="text-xl mb-4">List of Vehicles</h2>
                 {selectedCustomer.vehicles.length === 0 ? (
@@ -108,11 +104,11 @@ const UnderwriterRequests = () => {
                   <ul className="space-y-2">
                     {selectedCustomer.vehicles.map((vehicle) => (
                       <li
-                        key={vehicle.chassis_number}
+                        key={vehicle.id}
                         className="flex justify-between items-center border p-2 rounded hover:bg-gray-50 cursor-pointer"
                       >
                         <span className="flex-1">
-                          {vehicle.vehicle_make} {vehicle.vehicle_model} – {vehicle.registration_number}
+                          {vehicle.make} {vehicle.model} – {vehicle.plate_number}
                         </span>
                       </li>
                     ))}

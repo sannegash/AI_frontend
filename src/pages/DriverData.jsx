@@ -51,7 +51,11 @@ const DriverData = () => {
         });
       } else {
         setDriver(null);
-        setFormData({ driver_firstname: "", driver_lastname: "", licence_number: "" });
+        setFormData({
+          driver_firstname: "",
+          driver_lastname: "",
+          licence_number: "",
+        });
       }
     } catch (err) {
       setError("Failed to fetch driver data.");
@@ -64,7 +68,7 @@ const DriverData = () => {
 
   const handleVehicleSelect = (vehicle) => {
     setSelectedVehicle(vehicle);
-    fetchDriver(vehicle.id);
+    fetchDriver(vehicle.id);  // Fetch the driver data for the selected vehicle
   };
 
   const handleSubmit = async (e) => {
@@ -74,13 +78,19 @@ const DriverData = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       if (driver) {
+        // Update existing driver
         await axios.put(`${API_BASE}driver/${driver.id}/`, formData, config);
       } else {
+        // Create new driver
         await axios.post(`${API_BASE}driver/`, { ...formData, vehicle: selectedVehicle.id }, config);
       }
-      fetchVehicles();
-      setSelectedVehicle(null);
-      setFormData({ driver_firstname: "", driver_lastname: "", licence_number: "" });
+      fetchVehicles(); // Re-fetch vehicles to get updated data
+      setSelectedVehicle(null); // Reset selected vehicle
+      setFormData({
+        driver_firstname: "",
+        driver_lastname: "",
+        licence_number: "",
+      }); // Reset form
     } catch (err) {
       setError("Error submitting driver data.");
     }
@@ -93,10 +103,14 @@ const DriverData = () => {
       await axios.delete(`${API_BASE}driver/${driver.id}/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchVehicles();
-      setSelectedVehicle(null);
-      setDriver(null);
-      setFormData({ driver_firstname: "", driver_lastname: "", licence_number: "" });
+      fetchVehicles(); // Re-fetch vehicles after deletion
+      setSelectedVehicle(null); // Reset selected vehicle
+      setDriver(null); // Reset driver
+      setFormData({
+        driver_firstname: "",
+        driver_lastname: "",
+        licence_number: "",
+      }); // Reset form
     } catch (err) {
       setError("Failed to remove driver data.");
     }
@@ -119,8 +133,9 @@ const DriverData = () => {
                 <li
                   key={vehicle.chassis_number}
                   className="flex justify-between items-center border p-2 rounded hover:bg-gray-50 cursor-pointer"
+                  onClick={() => handleVehicleSelect(vehicle)} // Ensure this is calling the right function
                 >
-                  <span onClick={() => handleVehicleSelect(vehicle)} className="flex-1 text-black">
+                  <span className="flex-1 text-black">
                     {vehicle.vehicle_make} {vehicle.vehicle_model} – {vehicle.registration_number}
                   </span>
                   <button
