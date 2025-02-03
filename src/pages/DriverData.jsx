@@ -6,7 +6,7 @@ import UserNavbar from "../components/Usernavbar";
 const DriverData = () => {
   const [vehicles, setVehicles] = useState([]);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
-  const [driver, setDriver] = useState(null); // Store the driver object
+  const [driver, setDriver] = useState(null);
   const [formData, setFormData] = useState({
     driver_firstname: "",
     driver_lastname: "",
@@ -14,21 +14,19 @@ const DriverData = () => {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const VEHICLE_API_ENDPOINT = "http://127.0.0.1:8000/vehicle/api/vehicle/";
-  const DRIVER_API_ENDPOINT = "http://127.0.0.1:8000/vehicle/api/driver/";
 
-  // Fetch vehicles on initial load
+  const API_BASE = "http://127.0.0.1:8000/vehicle/api/";
+
   useEffect(() => {
     const token = localStorage.getItem("access");
     if (!token) navigate("/login");
     else fetchVehicles();
   }, [navigate]);
 
-  // Fetch vehicle data
   const fetchVehicles = async () => {
     try {
       const token = localStorage.getItem("access");
-      const response = await axios.get(VEHICLE_API_ENDPOINT, {
+      const response = await axios.get(`${API_BASE}vehicle/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setVehicles(response.data);
@@ -37,115 +35,80 @@ const DriverData = () => {
     }
   };
 
-  // Fetch driver data for the selected vehicle
-  const fetchDriver = async () => {
+  const fetchDriver = async (vehicleId) => {
     try {
       const token = localStorage.getItem("access");
-      const response = await axios.get(DRIVER_API_ENDPOINT, {
+      const response = await axios.get(`${API_BASE}driver/?vehicle=${vehicleId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
-      console.log("api reponse:", response.data);
-      if (response.data) {
-        setDriver(response.data);
-        // If a driver exists, populate the form with their data
+      if (response.data.length > 0) {
+        const driverData = response.data[0];
+        setDriver(driverData);
         setFormData({
-          driver_firstname: response.data.driver_firstname || "",
-          driver_lastname: response.data.driver_lastname || "",
-          licence_number: response.data.licence_number || "",
+          driver_firstname: driverData.driver_firstname || "",
+          driver_lastname: driverData.driver_lastname || "",
+          licence_number: driverData.licence_number || "",
         });
       } else {
-        // If no driver exists, reset the form to add a new driver
-        setFormData({
-          driver_firstname: "",
-          driver_lastname: "",
-          licence_number: "",
-        });
+        setDriver(null);
+        setFormData({ driver_firstname: "", driver_lastname: "", licence_number: "" });
       }
     } catch (err) {
       setError("Failed to fetch driver data.");
     }
   };
 
-  // Handle form data changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle vehicle selection and fetch associated driver data
   const handleVehicleSelect = (vehicle) => {
     setSelectedVehicle(vehicle);
-    fetchDriver(vehicle.id); // Fetch driver based on the selected vehicle
+    fetchDriver(vehicle.id);
   };
 
-  // Handle form submission for adding/updating driver data
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!selectedVehicle) return;
     const token = localStorage.getItem("access");
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       if (driver) {
-        // Update existing driver information
-        await axios.put(
-          `${DRIVER_API_ENDPOINT}${driver.id}/`,
-          formData,
-          config
-        );
+        await axios.put(`${API_BASE}driver/${driver.id}/`, formData, config);
       } else {
-        // Add new driver
-        await axios.post(
-          DRIVER_API_ENDPOINT,
-          { ...formData, vehicle: selectedVehicle.id },
-          config
-        );
+        await axios.post(`${API_BASE}driver/`, { ...formData, vehicle: selectedVehicle.id }, config);
       }
-      fetchVehicles(); // Re-fetch vehicles to refresh the list
-      setFormData({
-        driver_firstname: "",
-        driver_lastname: "",
-        licence_number: "",
-      });
-      setSelectedVehicle(null); // Clear the selected vehicle after submit
+      fetchVehicles();
+      setSelectedVehicle(null);
+      setFormData({ driver_firstname: "", driver_lastname: "", licence_number: "" });
     } catch (err) {
       setError("Error submitting driver data.");
     }
   };
 
-  // Handle removing driver data
   const handleRemoveDriver = async () => {
-    if (driver) {
-      try {
-        const token = localStorage.getItem("access");
-        await axios.delete(`${DRIVER_API_ENDPOINT}${driver.id}/`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        fetchVehicles();
-        setSelectedVehicle(null);
-        setFormData({
-          driver_firstname: "",
-          driver_lastname: "",
-          licence_number: "",
-        });
-        setDriver(null); // Clear the driver after removal
-      } catch (err) {
-        setError("Failed to remove driver data.");
-      }
+    if (!driver) return;
+    try {
+      const token = localStorage.getItem("access");
+      await axios.delete(`${API_BASE}driver/${driver.id}/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchVehicles();
+      setSelectedVehicle(null);
+      setDriver(null);
+      setFormData({ driver_firstname: "", driver_lastname: "", licence_number: "" });
+    } catch (err) {
+      setError("Failed to remove driver data.");
     }
   };
-
 
   return (
     <div className="w-screen min-h-screen bg-white flex flex-col">
       <UserNavbar />
       <main className="flex flex-col p-4">
         <h1 className="text-3xl font-bold text-center mb-6 text-black">Driver Data</h1>
-        {error && (
-          <div className="text-red-500 text-sm mb-2 text-center">
-            {typeof error === "object" ? JSON.stringify(error) : error}
-          </div>
-        )}
+        {error && <div className="text-red-500 text-sm mb-2 text-center">{error}</div>}
 
-        {/* Vehicle List */}
         <section className="mb-8">
           <h2 className="text-2xl mb-4 text-black">List of Vehicles</h2>
           {vehicles.length === 0 ? (
@@ -157,16 +120,13 @@ const DriverData = () => {
                   key={vehicle.chassis_number}
                   className="flex justify-between items-center border p-2 rounded hover:bg-gray-50 cursor-pointer"
                 >
-                  <span
-                    onClick={() => handleVehicleSelect(vehicle)}
-                    className="flex-1 text-black"
-                  >
+                  <span onClick={() => handleVehicleSelect(vehicle)} className="flex-1 text-black">
                     {vehicle.vehicle_make} {vehicle.vehicle_model} – {vehicle.registration_number}
                   </span>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleRemoveDriver(vehicle.id);
+                      handleRemoveDriver();
                     }}
                     className="text-red-500 hover:underline"
                   >
@@ -178,61 +138,36 @@ const DriverData = () => {
           )}
         </section>
 
-        {/* Driver Form */}
         <section className="mb-8">
           <h2 className="text-2xl mb-4 text-black">
             {selectedVehicle ? "Edit Driver" : "Add Driver"}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Driver First Name */}
-            <div>
-              <label htmlFor="driver_firstname" className="block text-sm font-medium text-black">
-                Driver First Name
-              </label>
-              <input
-                type="text"
-                id="driver_firstname"
-                name="driver_firstname"
-                value={formData.driver_firstname}
-                onChange={handleChange}
-                className="mt-1 border w-full px-4 py-2 rounded-md bg-black text-white"
-              />
-            </div>
-
-            {/* Driver Last Name */}
-            <div>
-              <label htmlFor="driver_lastname" className="block text-sm font-medium text-black">
-                Driver Last Name
-              </label>
-              <input
-                type="text"
-                id="driver_lastname"
-                name="driver_lastname"
-                value={formData.driver_lastname}
-                onChange={handleChange}
-                className="mt-1 border w-full px-4 py-2 rounded-md bg-black text-white"
-              />
-            </div>
-
-            {/* License Number */}
-            <div>
-              <label htmlFor="licence_number" className="block text-sm font-medium text-black">
-                License Number
-              </label>
-              <input
-                type="text"
-                id="licence_number"
-                name="licence_number"
-                value={formData.licence_number}
-                onChange={handleChange}
-                className="mt-1 border w-full px-4 py-2 rounded-md bg-black text-white"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition"
-            >
+            <input
+              type="text"
+              name="driver_firstname"
+              value={formData.driver_firstname}
+              onChange={handleChange}
+              placeholder="Driver First Name"
+              className="border w-full px-4 py-2 rounded-md bg-black text-white"
+            />
+            <input
+              type="text"
+              name="driver_lastname"
+              value={formData.driver_lastname}
+              onChange={handleChange}
+              placeholder="Driver Last Name"
+              className="border w-full px-4 py-2 rounded-md bg-black text-white"
+            />
+            <input
+              type="text"
+              name="licence_number"
+              value={formData.licence_number}
+              onChange={handleChange}
+              placeholder="License Number"
+              className="border w-full px-4 py-2 rounded-md bg-black text-white"
+            />
+            <button type="submit" className="w-full bg-blue-600 text-white px-4 py-2 rounded-md">
               {selectedVehicle ? "Update Driver" : "Add Driver"}
             </button>
           </form>
