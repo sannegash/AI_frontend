@@ -6,6 +6,7 @@ import UserNavbar from "../components/Usernavbar";
 const DriverData = () => {
   const [vehicles, setVehicles] = useState([]);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [driver, setDriver] = useState(null); // Store the driver object
   const [formData, setFormData] = useState({
     driver_firstname: "",
     driver_lastname: "",
@@ -16,103 +17,122 @@ const DriverData = () => {
   const VEHICLE_API_ENDPOINT = "http://127.0.0.1:8000/vehicle/api/vehicle/";
   const DRIVER_API_ENDPOINT = "http://127.0.0.1:8000/vehicle/api/driver/";
 
-  const initialFormState = {
-    driver_firstname: "",
-    driver_lastname: "",
-    licence_number: "",
-  };
+  // Fetch vehicles on initial load
+  useEffect(() => {
+    const token = localStorage.getItem("access");
+    if (!token) navigate("/login");
+    else fetchVehicles();
+  }, [navigate]);
 
-  // Fetch vehicles list
+  // Fetch vehicle data
   const fetchVehicles = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("access");
       const response = await axios.get(VEHICLE_API_ENDPOINT, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setVehicles(response.data);
     } catch (err) {
-      console.error("Error fetching vehicles:", err);
       setError("Failed to fetch vehicle data.");
     }
   };
 
-  useEffect(() => {
-    fetchVehicles();
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleVehicleSelect = (vehicle) => {
-    setSelectedVehicle(vehicle);
-    // Fetch and populate form data based on selected vehicle's driver data
-    setFormData({
-      driver_firstname: vehicle.driver_firstname || "",
-      driver_lastname: vehicle.driver_lastname || "",
-      licence_number: vehicle.licence_number || "",
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("accessToken");
-
+  // Fetch driver data for the selected vehicle
+  const fetchDriver = async () => {
     try {
-      if (selectedVehicle && selectedVehicle.driver) {
-        // Update driver information for selected vehicle
-        await axios.put(
-          `${DRIVER_API_ENDPOINT}${selectedVehicle.driver.id}/`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+      const token = localStorage.getItem("access");
+      const response = await axios.get(DRIVER_API_ENDPOINT, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      
+      console.log("api reponse:", response.data);
+      if (response.data) {
+        setDriver(response.data);
+        // If a driver exists, populate the form with their data
+        setFormData({
+          driver_firstname: response.data.driver_firstname || "",
+          driver_lastname: response.data.driver_lastname || "",
+          licence_number: response.data.licence_number || "",
+        });
       } else {
-        // Add new driver for selected vehicle
-        await axios.post(DRIVER_API_ENDPOINT, { ...formData, vehicle: selectedVehicle.id }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+        // If no driver exists, reset the form to add a new driver
+        setFormData({
+          driver_firstname: "",
+          driver_lastname: "",
+          licence_number: "",
         });
       }
-      fetchVehicles();
-      setFormData(initialFormState);
-      setSelectedVehicle(null);
     } catch (err) {
-      console.error("Error submitting driver data:", err.response?.data || err.message);
-      setError("An error occurred while submitting driver data.");
+      setError("Failed to fetch driver data.");
     }
   };
 
-  const handleRemoveDriver = async (vehicleId) => {
-    const token = localStorage.getItem("accessToken");
+  // Handle form data changes
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Handle vehicle selection and fetch associated driver data
+  const handleVehicleSelect = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    fetchDriver(vehicle.id); // Fetch driver based on the selected vehicle
+  };
+
+  // Handle form submission for adding/updating driver data
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("access");
     try {
-      await axios.delete(`${DRIVER_API_ENDPOINT}${vehicleId}/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      fetchVehicles();
-      if (selectedVehicle && selectedVehicle.id === vehicleId) {
-        setSelectedVehicle(null);
-        setFormData(initialFormState);
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      if (driver) {
+        // Update existing driver information
+        await axios.put(
+          `${DRIVER_API_ENDPOINT}${driver.id}/`,
+          formData,
+          config
+        );
+      } else {
+        // Add new driver
+        await axios.post(
+          DRIVER_API_ENDPOINT,
+          { ...formData, vehicle: selectedVehicle.id },
+          config
+        );
       }
+      fetchVehicles(); // Re-fetch vehicles to refresh the list
+      setFormData({
+        driver_firstname: "",
+        driver_lastname: "",
+        licence_number: "",
+      });
+      setSelectedVehicle(null); // Clear the selected vehicle after submit
     } catch (err) {
-      console.error("Error deleting driver data:", err.response?.data || err.message);
-      setError("Failed to remove driver data.");
+      setError("Error submitting driver data.");
     }
   };
+
+  // Handle removing driver data
+  const handleRemoveDriver = async () => {
+    if (driver) {
+      try {
+        const token = localStorage.getItem("access");
+        await axios.delete(`${DRIVER_API_ENDPOINT}${driver.id}/`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        fetchVehicles();
+        setSelectedVehicle(null);
+        setFormData({
+          driver_firstname: "",
+          driver_lastname: "",
+          licence_number: "",
+        });
+        setDriver(null); // Clear the driver after removal
+      } catch (err) {
+        setError("Failed to remove driver data.");
+      }
+    }
+  };
+
 
   return (
     <div className="w-screen min-h-screen bg-white flex flex-col">
@@ -134,7 +154,7 @@ const DriverData = () => {
             <ul className="space-y-2">
               {vehicles.map((vehicle) => (
                 <li
-                  key={vehicle.id}
+                  key={vehicle.chassis_number}
                   className="flex justify-between items-center border p-2 rounded hover:bg-gray-50 cursor-pointer"
                 >
                   <span

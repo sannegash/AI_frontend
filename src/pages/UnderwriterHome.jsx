@@ -18,7 +18,7 @@ const Sidebar = () => {
       </button>
       <button
         className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
-        onClick={() => navigate("/newcustomer")}
+        onClick={() => navigate("/ClaimRequests")}
       >
         Claim Requests 
       </button>
