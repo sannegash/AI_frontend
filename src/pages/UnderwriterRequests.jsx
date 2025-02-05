@@ -203,60 +203,60 @@ const UnderwriterRequests = () => {
 
           {isPolicyFormVisible && (
             <div className="bg-white p-6 mt-4 rounded shadow-md">
-              <h3 className="text-2xl font-semibold">Create Policy</h3>
+              <h3 className="text-2xl font-semibold text-black">Create Policy</h3>
               <form onSubmit={handlePolicySubmit}>
                 <div className="mb-4">
-                  <label htmlFor="policy_type" className="block font-semibold mb-2">Policy Type</label>
+                  <label htmlFor="policy_type" className="block font-semibold mb-2 text-black">Policy Type</label>
                   <input
                     type="text"
                     name="policy_type"
                     value={policyData.policy_type}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded"
+                    className="w-full px-4 py-2 border border-gray-300 rounded bg-gray-800 text-white"
                     required
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="coverage_start_date" className="block font-semibold mb-2">Coverage Start Date</label>
+                  <label htmlFor="coverage_start_date" className="block font-semibold mb-2 text-black">Coverage Start Date</label>
                   <input
                     type="date"
                     name="coverage_start_date"
                     value={policyData.coverage_start_date}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded"
+                    className="w-full px-4 py-2 border border-gray-300 rounded bg-gray-800 text-white"
                     required
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="coverage_end_date" className="block font-semibold mb-2">Coverage End Date</label>
+                  <label htmlFor="coverage_end_date" className="block font-semibold mb-2 text-black">Coverage End Date</label>
                   <input
                     type="date"
                     name="coverage_end_date"
                     value={policyData.coverage_end_date}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded"
+                    className="w-full px-4 py-2 border border-gray-300 rounded bg-gray-800 text-white"
                     required
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="premium_amount" className="block font-semibold mb-2">Premium Amount</label>
+                  <label htmlFor="premium_amount" className="block font-semibold mb-2 text-black">Premium Amount</label>
                   <input
                     type="number"
                     name="premium_amount"
                     value={policyData.premium_amount}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded"
+                    className="w-full px-4 py-2 border border-gray-300 rounded bg-gray-800 text-white"
                     required
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="insured_value" className="block font-semibold mb-2">Insured Value</label>
+                  <label htmlFor="insured_value" className="block font-semibold mb-2 text-black">Insured Value</label>
                   <input
                     type="number"
                     name="insured_value"
                     value={policyData.insured_value}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded"
+                    className="w-full px-4 py-2 border border-gray-300 rounded bg-gray-800 text-white"
                     required
                   />
                 </div>
@@ -269,6 +269,7 @@ const UnderwriterRequests = () => {
               </form>
             </div>
           )}
+
         </div>
       </div>
     </div>

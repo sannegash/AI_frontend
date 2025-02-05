@@ -152,6 +152,21 @@ const VehicleData = () => {
     }
   };
 
+  const handleAddVehicle = () => {
+    setSelectedVehicle(null);
+    setFormData({
+      chassis_number: "",
+      registration_number: "",
+      owner_name: "",
+      vehicle_make: "",
+      vehicle_model: "",
+      vehicle_year: "",
+      fuel_type: "",
+      transmission_type: "",
+      engine_capacity: "",
+      color: "",
+    });
+  };
   // Utility function to map the status to a color
   const getStatusColor = (status) => {
     switch (status) {
@@ -172,6 +187,12 @@ const VehicleData = () => {
       <main className="flex flex-col p-4">
         <h1 className="text-3xl font-bold text-center mb-6 text-black">Vehicle Data</h1>
         {error && <div className="text-red-500 text-sm mb-2 text-center">{error}</div>}
+        <button
+          className="w-full py-2 px-4 bg-green-500 text-white rounded mb-4 hover:bg-green-600"
+          onClick={handleAddVehicle}
+        >
+          Add Vehicle
+        </button>
 
         <section className="mb-8">
           <h2 className="text-2xl mb-4 text-black">List of Vehicles</h2>
