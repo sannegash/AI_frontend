@@ -6,9 +6,9 @@ const Policy = () => {
   const [vehicles, setVehicles] = useState([]);
   const [error, setError] = useState("");
   const [selectedVehicle, setSelectedVehicle] = useState(null);
-  const [policy, setPolicy] = useState(null); // For storing the selected vehicle's policy
-  const [isPolicyVisible, setIsPolicyVisible] = useState(false); // Control the visibility of the policy form
-  const [customerId, setCustomerId] = useState(null); // Customer ID
+  const [policy, setPolicy] = useState(null);
+  const [isPolicyVisible, setIsPolicyVisible] = useState(false);
+  const [customerId, setCustomerId] = useState(null);
 
   const VEHICLE_API_ENDPOINT = "http://127.0.0.1:8000/vehicle/api/vehicle/";
   const POLICY_API_ENDPOINT = "http://127.0.0.1:8000/policies/api/";
@@ -21,7 +21,10 @@ const Policy = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setVehicles(vehicleResponse.data);
+        // Filter vehicles that have policies
+        const vehiclesWithPolicies = vehicleResponse.data.filter((vehicle) => vehicle.policies.length > 0);
+        
+        setVehicles(vehiclesWithPolicies);
       } catch (error) {
         console.error("Error fetching vehicles:", error);
         setError("Failed to load vehicles.");
@@ -39,8 +42,8 @@ const Policy = () => {
       });
 
       setSelectedVehicle(vehicle);
-      setPolicy(policyResponse.data); // Set the policy data
-      setIsPolicyVisible(true); // Show the policy details form
+      setPolicy(policyResponse.data);
+      setIsPolicyVisible(true);
     } catch (error) {
       console.error("Error fetching policy:", error);
       setError("Failed to load policy.");
@@ -56,7 +59,6 @@ const Policy = () => {
         "http://127.0.0.1:8000/policies/agree-and-sign/",
         {
           vehicleId: selectedVehicle.id,
-          customerId: customerId, // Assuming the customer ID is set elsewhere in the app
           policyId: policy.id,
         },
         {
@@ -120,10 +122,10 @@ const Policy = () => {
                 <strong>Policy Number:</strong> {policy.policy_number}
               </p>
               <p>
-                <strong>Start Date:</strong> {policy.start_date}
+                <strong>Start Date:</strong> {policy.coverage_start_date}
               </p>
               <p>
-                <strong>End Date:</strong> {policy.end_date}
+                <strong>End Date:</strong> {policy.coverage_end_date}
               </p>
               <p>
                 <strong>Coverage:</strong> {policy.coverage}
@@ -131,7 +133,6 @@ const Policy = () => {
               <p>
                 <strong>Status:</strong> {policy.status}
               </p>
-              {/* Add more policy details as needed */}
               <div className="mt-4">
                 <button
                   onClick={handleAgreeAndSign}

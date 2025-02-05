@@ -48,7 +48,7 @@ const UnderwriterRequests = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/policies/create-policy/");
+        const response = await axios.get("http://127.0.0.1:8000/policies/customers/");
         setCustomers(response.data.customers || []);
       } catch (error) {
         console.error("Error fetching underwriting requests", error);
@@ -86,24 +86,32 @@ const UnderwriterRequests = () => {
 
   const handlePolicySubmit = async (e) => {
     e.preventDefault();
-    if (!selectedCustomer || !selectedVehicle) return;
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/policies/create-policy/", {
-        vehicleId: selectedVehicle.id,
-        policy_type: policyData.policy_type,
-        coverage_start_date: policyData.coverage_start_date,
-        coverage_end_date: policyData.coverage_end_date,
-        premium_amount: policyData.premium_amount,
-        insured_value: policyData.insured_value,
-        policy_holder: selectedCustomer.id,
-      });
-      alert("Policy created successfully!");
-      setIsPolicyFormVisible(false); // Hide the policy form after submission
-    } catch (error) {
-      console.error("Error creating policy", error);
-    }
-  };
+    console.log("Selected vehicle chassis number: ", selectedVehicle.chassis_number);
+    console.log("Submitted data:", policyData);
 
+    if (!selectedCustomer || !selectedVehicle) return;
+
+    try {
+        const response = await axios.post("http://127.0.0.1:8000/policies/create-policy/", {
+            vehicle: selectedVehicle.chassis_number,  // Use chassis_number instead of id
+            policy_type: policyData.policy_type,
+            coverage_start_date: policyData.coverage_start_date,  // Ensure proper date format (YYYY-MM-DD)
+            coverage_end_date: policyData.coverage_end_date,      // Ensure proper date format (YYYY-MM-DD)
+            premium_amount: parseFloat(policyData.premium_amount),  // Convert string to number
+            insured_value: parseFloat(policyData.insured_value),  // Convert string to number
+            policy_holder: selectedCustomer.id,
+        });
+
+        alert("Policy created successfully!");
+        setIsPolicyFormVisible(false); // Hide the policy form after submission
+    } catch (error) {
+        console.error("Error creating policy", error.response ? error.response.data : error);
+        alert("Error creating policy: " + (error.response ? error.response.data : "Unknown error"));
+    }
+};
+
+  
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setPolicyData((prevData) => ({
@@ -207,14 +215,18 @@ const UnderwriterRequests = () => {
               <form onSubmit={handlePolicySubmit}>
                 <div className="mb-4">
                   <label htmlFor="policy_type" className="block font-semibold mb-2 text-black">Policy Type</label>
-                  <input
-                    type="text"
+                  <select
                     name="policy_type"
                     value={policyData.policy_type}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded bg-gray-800 text-white"
                     required
-                  />
+                  >
+                    <option value="" disabled>Select a policy type</option>
+                    <option value="Comprehensive">Comprehensive</option>
+                    <option value="Third-Party">Third-Party</option>
+                    <option value="Fire and Theft">Fire and Theft</option>
+                  </select>
                 </div>
                 <div className="mb-4">
                   <label htmlFor="coverage_start_date" className="block font-semibold mb-2 text-black">Coverage Start Date</label>
@@ -241,7 +253,7 @@ const UnderwriterRequests = () => {
                 <div className="mb-4">
                   <label htmlFor="premium_amount" className="block font-semibold mb-2 text-black">Premium Amount</label>
                   <input
-                    type="number"
+                    type="text"
                     name="premium_amount"
                     value={policyData.premium_amount}
                     onChange={handleInputChange}
@@ -252,7 +264,7 @@ const UnderwriterRequests = () => {
                 <div className="mb-4">
                   <label htmlFor="insured_value" className="block font-semibold mb-2 text-black">Insured Value</label>
                   <input
-                    type="number"
+                    type="text"
                     name="insured_value"
                     value={policyData.insured_value}
                     onChange={handleInputChange}
