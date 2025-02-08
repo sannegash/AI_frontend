@@ -44,7 +44,7 @@ const Policy = () => {
   };
 
   return (
-    <div className="w-screen min-h-screen bg-white flex text-black flex-col">
+    <div className="w-screen min-h-screen bg-white flex flex-col">
       <UserNavbar />
       <main className="flex flex-col p-4">
         <h1 className="text-3xl font-bold text-center mb-6 text-black">Your Policies</h1>
@@ -63,7 +63,7 @@ const Policy = () => {
                   onClick={() => handlePolicyClick(policy)} // Set selected policy on click
                 >
                   <span className="flex-1 text-black">
-                    {policy.policy_number} - {policy.vehicle_model} ({policy.status})
+                    {policy.policy_number} - {policy.vehicle} ({policy.status})
                   </span>
                 </li>
               ))}
@@ -73,14 +73,16 @@ const Policy = () => {
 
         {/* Conditional rendering of policy details */}
         {selectedPolicy && (
-          <section className="mt-6 p-4 border-t-2 border-gray-300">
+          <section className="mt-6 p-4 border-t-2  text-black border-gray-300">
             <h3 className="text-xl font-semibold text-black">Policy Details</h3>
             <p><strong>Policy Number:</strong> {selectedPolicy.policy_number}</p>
-            <p><strong>Vehicle Model:</strong> {selectedPolicy.vehicle_model}</p>
-            <p><strong>Status:</strong> {selectedPolicy.status}</p>
-            <p><strong>Start Date:</strong> {selectedPolicy.start_date}</p>
-            <p><strong>End Date:</strong> {selectedPolicy.end_date}</p>
+            <p><strong>Vehicle ID:</strong> {selectedPolicy.vehicle}</p>
+            <p><strong>Policy Type:</strong> {selectedPolicy.policy_type}</p>
+            <p><strong>Coverage Start Date:</strong> {selectedPolicy.coverage_start_date}</p>
+            <p><strong>Coverage End Date:</strong> {selectedPolicy.coverage_end_date}</p>
             <p><strong>Premium Amount:</strong> ${selectedPolicy.premium_amount}</p>
+            <p><strong>Insured Value:</strong> ${selectedPolicy.insured_value}</p>
+            <p><strong>Status:</strong> {selectedPolicy.status}</p>
 
             {/* Accept and Sign button */}
             <button
