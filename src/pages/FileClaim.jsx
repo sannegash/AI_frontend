@@ -15,7 +15,7 @@ const FileClaim = () => {
   const navigate = useNavigate();
 
   const VEHICLE_API_ENDPOINT = "http://127.0.0.1:8000/vehicle/api/vehicle/";
-  const CLAIM_API_ENDPOINT = "http://127.0.0.1:8000/claims/api/claim/";
+  const CLAIM_API_ENDPOINT = "http://127.0.0.1:8000/claims/claims/";
 
   useEffect(() => {
     const token = localStorage.getItem("access");
@@ -30,15 +30,15 @@ const FileClaim = () => {
       const response = await axios.get(VEHICLE_API_ENDPOINT, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setVehicles(response.data);
+      setVehicles(response.data); // Make sure the response has the vehicle 'id'
     } catch (err) {
       console.error("Error fetching vehicle data:", err);
       setError("Failed to fetch vehicle data.");
     }
   };
 
-  const handleVehicleSelect = (chassis_number) => {
-    const vehicle = vehicles.find((v) => v.chassis_number === chassis_number);
+  const handleVehicleSelect = (vehicleId) => {
+    const vehicle = vehicles.find((v) => v.id === vehicleId); // Match by id, not chassis_number
     setSelectedVehicle(vehicle);
     console.log("Selected Vehicle:", vehicle); // Log the selected vehicle
   };
@@ -60,7 +60,7 @@ const FileClaim = () => {
 
     // Prepare claim data with the automatically set claim_date
     const claimData = {
-      vehicle: selectedVehicle.chassis_number, // Use chassis_number for identification
+      vehicle: selectedVehicle.id, // Use 'id' instead of 'chassis_number'
       claim_date: claimDate, // Automatically set the claim date to today
       accident_date: formData.accident_date,
       accident_location: formData.accident_location,
@@ -104,12 +104,12 @@ const FileClaim = () => {
             <ul className="space-y-2">
               {vehicles.map((vehicle) => (
                 <li
-                  key={vehicle.chassis_number} // Use chassis_number as the unique key
+                  key={vehicle.id} // Use 'id' as the unique key
                   className="flex justify-between items-center border p-2 rounded hover:bg-gray-50 cursor-pointer"
-                  onClick={() => handleVehicleSelect(vehicle.chassis_number)} // Pass chassis_number to handleVehicleSelect
+                  onClick={() => handleVehicleSelect(vehicle.id)} // Pass 'id' to handleVehicleSelect
                 >
                   <span className="text-black">
-                    {vehicle.vehicle_make} {vehicle.vehicle_model} – {vehicle.registration_number} (Chassis: {vehicle.chassis_number})
+                    {vehicle.vehicle_make} {vehicle.vehicle_model} – {vehicle.registration_number} (ID: {vehicle.id})
                   </span>
                 </li>
               ))}
@@ -120,7 +120,7 @@ const FileClaim = () => {
         {selectedVehicle && (
           <section className="mb-8">
             <h2 className="text-2xl mb-4 text-black">
-              File Claim for {selectedVehicle.vehicle_make} {selectedVehicle.vehicle_model} (Chassis: {selectedVehicle.chassis_number})
+              File Claim for {selectedVehicle.vehicle_make} {selectedVehicle.vehicle_model} (ID: {selectedVehicle.id})
             </h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <input

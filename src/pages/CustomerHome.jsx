@@ -80,7 +80,6 @@ const CustomerHome = () => {
         </div>
       </div>
       {/* Footer */}
-      <Footer />
     </div>
   );
 };

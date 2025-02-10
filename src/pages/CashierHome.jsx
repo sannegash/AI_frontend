@@ -14,19 +14,13 @@ const Sidebar = () => {
         className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
         onClick={() => navigate("/requestunderwriter")}
       >
-        Request Underwriter
+        Pay Customer  
       </button>
       <button
         className="w-full py-2 px-4 bg-blue-500 text-white rounded mb-4 hover:bg-blue-600"
         onClick={() => navigate("/newcustomer")}
       >
-        New Customer
-      </button>
-      <button 
-        className="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600"
-        onClick={() => navigate("/makepayment")} 
-      >
-        Make Payment
+        Pay Institution  
       </button>
     </div>
   );
@@ -63,9 +57,9 @@ const CashierHome = () => {
         </div>
       </div>
       {/* Footer */}
-      <Footer />
     </div>
   );
 };
 
 export default CashierHome;
+
