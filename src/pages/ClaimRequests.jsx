@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import UserNavbar from "../components/Usernavbar";
 import Footer from "../components/Footer";
 
+const VEHICLE_API_ENDPOINT = "http://127.0.0.1:8000/vehicle/api/vehicle/";
+const CLAIMS_API_ENDPOINT = "http://127.0.0.1:8000/claims/claims/list/";
+
 const Sidebar = () => {
   const navigate = useNavigate();
-
   return (
     <div className="w-64 h-full bg-white shadow-md flex flex-col p-4">
       <h2 className="text-xl font-semibold mb-4">Menu</h2>
@@ -34,8 +36,10 @@ const Sidebar = () => {
 
 const ClaimRequests = () => {
   const [claims, setClaims] = useState([]);
+  const [vehicles, setVehicles] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedClaim, setSelectedClaim] = useState(null);
 
   useEffect(() => {
     const fetchClaims = async () => {
@@ -47,14 +51,37 @@ const ClaimRequests = () => {
       }
 
       try {
-        const response = await axios.get("http://127.0.0.1:8000/claims/claims/list/", {
+        const response = await axios.get(CLAIMS_API_ENDPOINT, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         setClaims(response.data);
+        fetchVehicles(response.data, token);
       } catch (err) {
         setError("Failed to fetch claims. Please try again.");
       } finally {
         setLoading(false);
+      }
+    };
+
+    const fetchVehicles = async (claims, token) => {
+      try {
+        const vehicleIds = [...new Set(claims.map((claim) => claim.vehicle))]; // Get unique vehicle IDs
+        const vehicleRequests = vehicleIds.map((id) =>
+          axios.get(`${VEHICLE_API_ENDPOINT}${id}/`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+        );
+
+        const vehicleResponses = await Promise.all(vehicleRequests);
+        const vehicleData = {};
+        vehicleResponses.forEach((res) => {
+          vehicleData[res.data.id] = res.data; // Store vehicles by ID
+        });
+
+        setVehicles(vehicleData);
+      } catch (err) {
+        console.error("Failed to fetch vehicle details:", err);
       }
     };
 
@@ -83,11 +110,33 @@ const ClaimRequests = () => {
                 {claims.map((claim) => (
                   <li
                     key={claim.id}
-                    className="flex justify-between items-center border p-2 rounded hover:bg-gray-50 cursor-pointer"
+                    className="border p-2 rounded hover:bg-gray-50 cursor-pointer"
+                    onClick={() =>
+                      setSelectedClaim(selectedClaim === claim.id ? null : claim.id)
+                    }
                   >
-                    <span className="flex-1 text-black">
-                      {claim.claim_number} - {claim.status}
-                    </span>
+                    <div className="flex justify-between items-center">
+                      <span className="flex-1 text-black">
+                        {vehicles[claim.vehicle]
+                          ? `${vehicles[claim.vehicle].vehicle_make} ${vehicles[claim.vehicle].vehicle_model} (${vehicles[claim.vehicle].chassis_number})`
+                          : "Loading vehicle..."}{" "}
+                        - {claim.status}
+                      </span>
+                    </div>
+                    {selectedClaim === claim.id && (
+                      <div className="mt-2 p-3 bg-gray-200 rounded text-black">
+                        <p>
+                          <strong>Vehicle:</strong>{" "}
+                          {vehicles[claim.vehicle]
+                            ? `${vehicles[claim.vehicle].vehicle_make} ${vehicles[claim.vehicle].vehicle_model} (${vehicles[claim.vehicle].chassis_number})`
+                            : "Loading..."}
+                        </p>
+                        <p><strong>Status:</strong> {claim.status}</p>
+                        <p><strong>Accident Location:</strong> {claim.accident_location}</p>
+                        <p><strong>Accident Date:</strong> {claim.accident_date}</p>
+                        <p><strong>Police Report Number:</strong> {claim.police_report_number}</p>
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
