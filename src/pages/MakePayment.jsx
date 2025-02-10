@@ -4,12 +4,17 @@ import UserNavbar from "../components/Usernavbar"; // Assuming you have a navbar
 import Footer from "../components/Footer";
 
 const MakePayment = () => {
-  const [accountName, setAccountName] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("ETB");
-  const [reference, setReference] = useState("");
-  const [bankCode, setBankCode] = useState("");
+  const [reference, setReference] = useState(""); 
+  const [callbackUrl, setCallbackUrl] = useState("");
+  const [returnUrl, setReturnUrl] = useState("");
+  const [title, setTitle] = useState("Payment for subscription");
+  const [description, setDescription] = useState("Payment for monthly subscription");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false); // Loading state to show when the API call is in progress
 
@@ -26,12 +31,15 @@ const MakePayment = () => {
     setLoading(true); // Start loading
 
     const paymentData = {
-      account_name: accountName,
-      account_number: accountNumber,
       amount: amount,
-      currency: currency,
-      reference: reference,
-      bank_code: bankCode,
+      email: email,
+      first_name: firstName,
+      last_name: lastName,
+      phone_number: phoneNumber,
+      callback_url: callbackUrl,
+      return_url: returnUrl,
+      title: title,
+      description: description,
     };
 
     try {
@@ -46,9 +54,9 @@ const MakePayment = () => {
           },
         }
       );
-      setStatus("Transfer Successful: " + response.data.message); // Assuming the response contains a 'message'
+      setStatus("Payment Successful: " + response.data.message); // Assuming the response contains a 'message'
     } catch (error) {
-      setStatus("Transfer Failed: " + (error.response?.data || error.message));
+      setStatus("Payment Failed: " + (error.response?.data || error.message));
     } finally {
       setLoading(false); // Stop loading
     }
@@ -64,22 +72,41 @@ const MakePayment = () => {
           <h2 className="text-2xl font-semibold mb-4">Initiate Payment Transfer</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-gray-700">Account Name:</label>
+              <label className="block text-gray-700">Email:</label>
               <input
-                type="text"
-                value={accountName}
-                onChange={(e) => setAccountName(e.target.value)}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full p-2 border rounded"
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">Account Number:</label>
+              <label className="block text-gray-700">First Name:</label>
               <input
                 type="text"
-                value={accountNumber}
-                onChange={(e) => setAccountNumber(e.target.value)}
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
                 required
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Last Name:</label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Phone Number:</label>
+              <input
+                type="text"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
                 className="w-full p-2 border rounded"
               />
             </div>
@@ -104,11 +131,41 @@ const MakePayment = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">Bank Code:</label>
+              <label className="block text-gray-700">Callback URL:</label>
+              <input
+                type="url"
+                value={callbackUrl}
+                onChange={(e) => setCallbackUrl(e.target.value)}
+                required
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Return URL:</label>
+              <input
+                type="url"
+                value={returnUrl}
+                onChange={(e) => setReturnUrl(e.target.value)}
+                required
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Title:</label>
               <input
                 type="text"
-                value={bankCode}
-                onChange={(e) => setBankCode(e.target.value)}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Description:</label>
+              <input
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 required
                 className="w-full p-2 border rounded"
               />

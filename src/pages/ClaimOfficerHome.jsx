@@ -99,19 +99,7 @@ const ClaimOfficerHome = () => {
           {selectedClaim && (
             <div className="bg-white p-6 rounded shadow-md">
               <h2 className="text-2xl font-semibold mb-4">Claim Details</h2>
-              
-              {/* Vehicle Data */}
               <div className="mb-4">
-                <h3 className="text-xl font-semibold">Vehicle Information</h3>
-                <p>Make: {selectedClaim.vehicle.make}</p>
-                <p>Model: {selectedClaim.vehicle.model}</p>
-                <p>Year: {selectedClaim.vehicle.year}</p>
-                <p>VIN: {selectedClaim.vehicle.vin}</p>
-              </div>
-              
-              {/* Claim Data */}
-              <div className="mb-4">
-                <h3 className="text-xl font-semibold">Claim Information</h3>
                 <p>Status: {selectedClaim.status}</p>
                 <p>Settlement Amount: ${selectedClaim.settlement_amount}</p>
                 <p>Description: {selectedClaim.description}</p>

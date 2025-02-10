@@ -99,7 +99,7 @@ const CashierHome = () => {
                     <p><strong>Claim Date:</strong> {claim.claim_date}</p>
                     <p><strong>Accident Date:</strong> {claim.accident_date}</p>
                     <p><strong>Estimated Damage Cost:</strong> {claim.estimated_damage_cost}</p>
-                    <p><strong>Description:</strong> {claim.description}</p>
+                    <p>Settlement Amount: ${claim.settlement_amount}</p>
                   </li>
                 ))}
               </ul>
