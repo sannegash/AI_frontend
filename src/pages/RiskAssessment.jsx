@@ -38,7 +38,9 @@ const RiskAssessment = () => {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [riskAssessmentData, setRiskAssessmentData] = useState(null);
   const [isRiskAssessing, setIsRiskAssessing] = useState(false);
+  const navigate = useNavigate();
 
+  // Fetch customers and their vehicles
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
@@ -53,26 +55,43 @@ const RiskAssessment = () => {
 
   const handleCustomerSelect = (customer) => {
     setSelectedCustomer(customer);
-    setSelectedVehicle(null); // Reset selected vehicle when customer changes
+    setRiskAssessmentData(null);
+    setSelectedVehicle(null); // Reset selected vehicle
   };
 
   const handleVehicleSelect = (vehicle) => {
     setSelectedVehicle(vehicle);
   };
 
+  // Perform risk assessment for selected customer and vehicle
   const handleAssessRisk = async () => {
     if (!selectedCustomer || !selectedVehicle) {
-      alert("Please select both a customer and a vehicle.");
+      alert("Please select a customer and a vehicle.");
       return;
     }
 
     setIsRiskAssessing(true);
 
+    // Get the authentication token from localStorage
+    const token = localStorage.getItem("access");
+
+    if (!token) {
+      alert("You are not logged in.");
+      setIsRiskAssessing(false);
+      return;
+    }
+
     try {
-      const response = await axios.post("http://127.0.0.1:8000/risk/assess/", {
-        customerId: selectedCustomer.id,
-        vehicleId: selectedVehicle.id,
-      });
+      const response = await axios.post(
+        `http://127.0.0.1:8000/risk/api/risk/${selectedVehicle.id}/ai_prediction/`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       setRiskAssessmentData(response.data);
     } catch (error) {
       console.error("Error assessing risk", error);
@@ -88,16 +107,16 @@ const RiskAssessment = () => {
         <Sidebar />
         <div className="flex-1 p-6 overflow-auto ml-64">
           <h2 className="text-3xl font-bold mb-6 text-blue-700">Risk Assessment</h2>
-
+          
           <div className="bg-white p-6 rounded shadow-md">
             <h2 className="text-2xl font-semibold mb-4 text-black">Select Customer</h2>
             <div className="space-y-2">
               {customers.map((customer) => (
                 <button
-                  key={customer.id}
+                  key={customer.username}
                   onClick={() => handleCustomerSelect(customer)}
                   className={`w-full py-2 px-4 rounded mb-2 ${
-                    selectedCustomer?.id === customer.id
+                    selectedCustomer?.username === customer.username
                       ? "bg-blue-500 text-white"
                       : "bg-gray-200 hover:bg-gray-300"
                   }`}
@@ -109,10 +128,21 @@ const RiskAssessment = () => {
           </div>
 
           {selectedCustomer && (
-            <div className="bg-white p-6 mt-4 rounded shadow-md">
-              <h2 className="text-2xl font-semibold mb-4 text-black">Select Vehicle</h2>
-              <div className="space-y-2">
-                {selectedCustomer.vehicles.map((vehicle) => (
+            <div className="flex gap-6 mt-4">
+              <div className="w-1/2 bg-white p-6 rounded shadow-md">
+                <h2 className="text-2xl font-semibold mb-4 text-black">Customer Details</h2>
+                <p><strong>Name:</strong> {selectedCustomer.name}</p>
+                <p><strong>Email:</strong> {selectedCustomer.email}</p>
+                <p><strong>Phone number:</strong> {selectedCustomer.phone_number}</p>
+                <p><strong>City:</strong> {selectedCustomer.city}</p>
+                <p><strong>State:</strong> {selectedCustomer.state}</p>
+                <p><strong>Age:</strong> {selectedCustomer.age}</p>
+                <p><strong>Driving Experience:</strong> {selectedCustomer.driving_experience}</p>
+                <p><strong>Married:</strong> {selectedCustomer.married ? "Yes" : "No"}</p>
+                <p><strong>Accidents:</strong> {selectedCustomer.number_of_accidents}</p>
+
+                <h3 className="text-xl font-semibold mt-4 mb-2">Select Vehicle</h3>
+                {selectedCustomer.vehicles?.map((vehicle) => (
                   <button
                     key={vehicle.id}
                     onClick={() => handleVehicleSelect(vehicle)}
@@ -122,37 +152,37 @@ const RiskAssessment = () => {
                         : "bg-gray-200 hover:bg-gray-300"
                     }`}
                   >
-                    {vehicle.make} {vehicle.model} - {vehicle.plate_number}
+                    {vehicle.model} - {vehicle.model} ({vehicle.year})
                   </button>
                 ))}
               </div>
+
+              <div className="w-1/2 bg-white p-6 rounded shadow-md">
+                <h2 className="text-2xl font-semibold mb-4 text-black">Risk Assessment</h2>
+                <button
+                  onClick={handleAssessRisk}
+                  className="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  disabled={isRiskAssessing}
+                >
+                  {isRiskAssessing ? "Assessing..." : "Assess Risk"}
+                </button>
+
+                {riskAssessmentData ? (
+                  <div className="mt-6">
+                    <h3 className="text-2xl font-semibold mb-4">Risk Assessment Result</h3>
+                    <p><strong>Risk Factor:</strong> {riskAssessmentData.risk_factor}</p>
+                    <p><strong>Claim Likelihood:</strong> {(riskAssessmentData.claim_likelihood * 100).toFixed(2)}%</p>
+                  </div>
+                ) : (
+                  <p className="mt-6 text-gray-500">Risk assessment has not been done yet.</p>
+                )}
+              </div>
             </div>
           )}
-
-          <div className="bg-white p-6 mt-4 rounded shadow-md">
-            <button
-              onClick={handleAssessRisk}
-              className="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-              disabled={isRiskAssessing}
-            >
-              {isRiskAssessing ? "Assessing..." : "Assess Risk"}
-            </button>
-
-            {riskAssessmentData && (
-              <div className="mt-6">
-                <h3 className="text-2xl font-semibold mb-4">Risk Assessment Result</h3>
-                <p><strong>Risk Score:</strong> {riskAssessmentData.risk_score}</p>
-                <p><strong>Risk Level:</strong> {riskAssessmentData.risk_level}</p>
-                <p><strong>Suggested Actions:</strong> {riskAssessmentData.suggested_actions}</p>
-              </div>
-            )}
-          </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
 
 export default RiskAssessment;
-

@@ -55,9 +55,13 @@ const FileClaim = () => {
       return;
     }
 
-    // Prepare claim data
+    // Get the current date in the format YYYY-MM-DD for claim_date
+    const claimDate = new Date().toISOString().split("T")[0];
+
+    // Prepare claim data with the automatically set claim_date
     const claimData = {
       vehicle: selectedVehicle.chassis_number, // Use chassis_number for identification
+      claim_date: claimDate, // Automatically set the claim date to today
       accident_date: formData.accident_date,
       accident_location: formData.accident_location,
       police_report_number: formData.police_report_number,
