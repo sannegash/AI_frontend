@@ -279,7 +279,6 @@ const UnderwriterRequests = () => {
           )}
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

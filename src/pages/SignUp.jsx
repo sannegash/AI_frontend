@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"; // Changed from useHistory to us
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../index.css";
+import googleLogo from "../assets/google-logo.png";
 
 const SignupForm = () => {
   const [formData, setFormData] = useState({
@@ -222,10 +223,13 @@ const SignupForm = () => {
               Sign Up
             </button>
           </form>
+          {/* Google Signup Logo */}
+          <div className="flex justify-center mt-4">
+            <img src={googleLogo} alt="Google Signup" className="w-50  h-15 cursor-pointer" />
+          </div>
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 };
