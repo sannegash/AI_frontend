@@ -127,9 +127,11 @@ const VehicleData = () => {
     try {
       const token = localStorage.getItem("access");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      selectedVehicle
-        ? await axios.put(`${VEHICLE_API_ENDPOINT}${selectedVehicle.id}/`, formData, config)
-        : await axios.post(VEHICLE_API_ENDPOINT, formData, config);
+      if (selectedVehicle) {
+        await axios.put(`${VEHICLE_API_ENDPOINT}${selectedVehicle.id}/`, formData, config);
+      } else {
+        await axios.post(VEHICLE_API_ENDPOINT, formData, config);
+      }
       fetchVehicles();
       setFormData({});
       setSelectedVehicle(null);
@@ -167,6 +169,7 @@ const VehicleData = () => {
       color: "",
     });
   };
+
   // Utility function to map the status to a color
   const getStatusColor = (status) => {
     switch (status) {
@@ -229,101 +232,100 @@ const VehicleData = () => {
           )}
         </section>
 
-        {selectedVehicle && (
-          <section className="mb-8">
-            <h2 className="text-2xl mb-4 text-black">
-              Edit Vehicle: {selectedVehicle.vehicle_make} {selectedVehicle.vehicle_model}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <input
-                name="chassis_number"
-                value={formData.chassis_number || ""}
-                onChange={handleChange}
-                placeholder="Chassis Number"
-                required
-                className="block w-full p-2 border rounded"
-              />
-              <input
-                name="registration_number"
-                value={formData.registration_number || ""}
-                onChange={handleChange}
-                placeholder="Registration Number"
-                required
-                className="block w-full p-2 border rounded"
-              />
-              <input
-                name="owner_name"
-                value={formData.owner_name || ""}
-                onChange={handleChange}
-                placeholder="Owner Name"
-                required
-                className="block w-full p-2 border rounded"
-              />
-              <input
-                name="vehicle_make"
-                value={formData.vehicle_make || ""}
-                onChange={handleChange}
-                placeholder="Vehicle Make"
-                required
-                className="block w-full p-2 border rounded"
-              />
-              <input
-                name="vehicle_model"
-                value={formData.vehicle_model || ""}
-                onChange={handleChange}
-                placeholder="Vehicle Model"
-                required
-                className="block w-full p-2 border rounded"
-              />
-              <input
-                name="vehicle_year"
-                value={formData.vehicle_year || ""}
-                onChange={handleChange}
-                placeholder="Vehicle Year"
-                required
-                className="block w-full p-2 border rounded"
-              />
-              <input
-                name="fuel_type"
-                value={formData.fuel_type || ""}
-                onChange={handleChange}
-                placeholder="Fuel Type"
-                required
-                className="block w-full p-2 border rounded"
-              />
-              <input
-                name="transmission_type"
-                value={formData.transmission_type || ""}
-                onChange={handleChange}
-                placeholder="Transmission Type"
-                required
-                className="block w-full p-2 border rounded"
-              />
-              <input
-                name="engine_capacity"
-                value={formData.engine_capacity || ""}
-                onChange={handleChange}
-                placeholder="Engine Capacity"
-                required
-                className="block w-full p-2 border rounded"
-              />
-              <input
-                name="color"
-                value={formData.color || ""}
-                onChange={handleChange}
-                placeholder="Color"
-                required
-                className="block w-full p-2 border rounded"
-              />
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition"
-              >
-                Update Vehicle
-              </button>
-            </form>
-          </section>
-        )}
+        {/* Render the form below the list of vehicles */}
+        <section className="mb-8">
+          <h2 className="text-2xl mb-4 text-black">
+            {selectedVehicle ? `Edit Vehicle: ${selectedVehicle.vehicle_make} ${selectedVehicle.vehicle_model}` : "Add New Vehicle"}
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <input
+              name="chassis_number"
+              value={formData.chassis_number || ""}
+              onChange={handleChange}
+              placeholder="Chassis Number"
+              required
+              className="block w-full p-2 border rounded"
+            />
+            <input
+              name="registration_number"
+              value={formData.registration_number || ""}
+              onChange={handleChange}
+              placeholder="Registration Number"
+              required
+              className="block w-full p-2 border rounded"
+            />
+            <input
+              name="owner_name"
+              value={formData.owner_name || ""}
+              onChange={handleChange}
+              placeholder="Owner Name"
+              required
+              className="block w-full p-2 border rounded"
+            />
+            <input
+              name="vehicle_make"
+              value={formData.vehicle_make || ""}
+              onChange={handleChange}
+              placeholder="Vehicle Make"
+              required
+              className="block w-full p-2 border rounded"
+            />
+            <input
+              name="vehicle_model"
+              value={formData.vehicle_model || ""}
+              onChange={handleChange}
+              placeholder="Vehicle Model"
+              required
+              className="block w-full p-2 border rounded"
+            />
+            <input
+              name="vehicle_year"
+              value={formData.vehicle_year || ""}
+              onChange={handleChange}
+              placeholder="Vehicle Year"
+              required
+              className="block w-full p-2 border rounded"
+            />
+            <input
+              name="fuel_type"
+              value={formData.fuel_type || ""}
+              onChange={handleChange}
+              placeholder="Fuel Type"
+              required
+              className="block w-full p-2 border rounded"
+            />
+            <input
+              name="transmission_type"
+              value={formData.transmission_type || ""}
+              onChange={handleChange}
+              placeholder="Transmission Type"
+              required
+              className="block w-full p-2 border rounded"
+            />
+            <input
+              name="engine_capacity"
+              value={formData.engine_capacity || ""}
+              onChange={handleChange}
+              placeholder="Engine Capacity"
+              required
+              className="block w-full p-2 border rounded"
+            />
+            <input
+              name="color"
+              value={formData.color || ""}
+              onChange={handleChange}
+              placeholder="Color"
+              required
+              className="block w-full p-2 border rounded"
+            />
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition"
+            >
+              {selectedVehicle ? "Update Vehicle" : "Add Vehicle"}
+            </button>
+          </form>
+        </section>
       </main>
     </div>
   );

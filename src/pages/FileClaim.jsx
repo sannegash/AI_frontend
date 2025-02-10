@@ -1,114 +1,161 @@
 import React, { useState, useEffect } from "react";
-import Axios from "axios"; // Axios for API calls
-import Footer from "../components/Footer"; // Footer component
-import UserNavbar from "../components/Usernavbar"; // Navbar component
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import UserNavbar from "../components/Usernavbar";
 
 const FileClaim = () => {
-  const [selectedVehicle, setSelectedVehicle] = useState(null); // Selected vehicle
-  const [vehicles, setVehicles] = useState([]); // Vehicles fetched from the API
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [vehicles, setVehicles] = useState([]);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [formData, setFormData] = useState({
+    accident_date: "",
+    accident_location: "",
+    police_report_number: "",
+  });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  // Fetch vehicles data from the backend
+  const VEHICLE_API_ENDPOINT = "http://127.0.0.1:8000/vehicle/api/vehicle/";
+  const CLAIM_API_ENDPOINT = "http://127.0.0.1:8000/claims/api/claim/";
+
   useEffect(() => {
-    const fetchVehicles = async () => {
-      try {
-        setLoading(true); // Set loading to true before fetching
-        const response = await Axios.get("http://127.0.0.1:8000/vehicle/api/vehicle/"); // Replace with actual API endpoint
-        setVehicles(response.data?.data || []); // Adjust based on API structure
-      } catch (error) {
-        console.error("Error fetching vehicles:", error);
-        setError("Failed to load vehicles. Please try again.");
-      } finally {
-        setLoading(false); // Stop loading
-      }
+    const token = localStorage.getItem("access");
+    if (!token) navigate("/login");
+    else fetchVehicles();
+  }, [navigate]);
+
+  // Fetch available vehicles for the logged-in user
+  const fetchVehicles = async () => {
+    try {
+      const token = localStorage.getItem("access");
+      const response = await axios.get(VEHICLE_API_ENDPOINT, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setVehicles(response.data);
+    } catch (err) {
+      console.error("Error fetching vehicle data:", err);
+      setError("Failed to fetch vehicle data.");
+    }
+  };
+
+  const handleVehicleSelect = (chassis_number) => {
+    const vehicle = vehicles.find((v) => v.chassis_number === chassis_number);
+    setSelectedVehicle(vehicle);
+    console.log("Selected Vehicle:", vehicle); // Log the selected vehicle
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!selectedVehicle) {
+      setError("Please select a vehicle first.");
+      return;
+    }
+
+    // Prepare claim data
+    const claimData = {
+      vehicle: selectedVehicle.chassis_number, // Use chassis_number for identification
+      accident_date: formData.accident_date,
+      accident_location: formData.accident_location,
+      police_report_number: formData.police_report_number,
     };
 
-    fetchVehicles();
-  }, []);
+    console.log("Claim Data being sent to the backend:", claimData); // Log claim data before sending
 
-  // Handle vehicle selection
-  const handleSelectVehicle = (vehicle) => {
-    setSelectedVehicle(vehicle);
+    try {
+      const token = localStorage.getItem("access");
+      const response = await axios.post(CLAIM_API_ENDPOINT, claimData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("Backend Response:", response); // Log response from backend
+
+      // Reset form data and selected vehicle after successful submission
+      setFormData({
+        accident_date: "",
+        accident_location: "",
+        police_report_number: "",
+      });
+      setSelectedVehicle(null);
+    } catch (err) {
+      console.error("Error submitting claim:", err);
+      setError("Failed to submit claim.");
+    }
   };
 
   return (
-    <div className="w-screen h-screen bg-gray-100 flex flex-col">
-      {/* Navbar */}
+    <div className="w-screen min-h-screen bg-white flex flex-col">
       <UserNavbar />
-
-      {/* Main Content */}
-      <main className="flex-1 bg-gray-50 flex items-center justify-center">
-        <div className="bg-white shadow-md rounded-lg p-8 w-96">
-          {/* Heading */}
-          <h1 className="text-2xl font-bold text-center mb-4 text-gray-700">
-            File a Claim
-          </h1>
-
-          {/* Vehicle Selection */}
-          {loading ? (
-            <p>Loading vehicles...</p>
-          ) : error ? (
-            <p className="text-red-500 text-center">{error}</p>
-          ) : vehicles.length > 0 ? (
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold text-gray-700 mb-2">Select a Vehicle</h2>
-              <ul className="space-y-4">
-                {vehicles.map((vehicle) => (
-                  <li
-                    key={vehicle.id}
-                    className="bg-gray-200 rounded-md p-4 flex items-center justify-between"
-                  >
-                    <div className="flex items-center">
-                      {/* Render vehicle logo */}
-                      {vehicle.logo && (
-                        <img
-                          src={vehicle.logo}
-                          alt={`${vehicle.name} logo`}
-                          className="w-12 h-12 object-cover rounded-full mr-4"
-                        />
-                      )}
-                      <div>
-                        <h3 className="text-lg font-semibold">{vehicle.name}</h3>
-                        <p className="text-sm text-gray-600">{vehicle.description}</p>
-                      </div>
-                    </div>
-                    <button
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                      onClick={() => handleSelectVehicle(vehicle)}
-                    >
-                      Select Vehicle
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+      <main className="flex flex-col p-4">
+        <h1 className="text-3xl font-bold text-center mb-6 text-black">File a Claim</h1>
+        {error && <div className="text-red-500 text-sm mb-2 text-center">{error}</div>}
+        <section className="mb-8">
+          <h2 className="text-2xl mb-4 text-black">Select a Vehicle</h2>
+          {vehicles.length === 0 ? (
+            <p className="text-black">No vehicles available.</p>
           ) : (
-            <p>No vehicles available.</p>
+            <ul className="space-y-2">
+              {vehicles.map((vehicle) => (
+                <li
+                  key={vehicle.chassis_number} // Use chassis_number as the unique key
+                  className="flex justify-between items-center border p-2 rounded hover:bg-gray-50 cursor-pointer"
+                  onClick={() => handleVehicleSelect(vehicle.chassis_number)} // Pass chassis_number to handleVehicleSelect
+                >
+                  <span className="text-black">
+                    {vehicle.vehicle_make} {vehicle.vehicle_model} – {vehicle.registration_number} (Chassis: {vehicle.chassis_number})
+                  </span>
+                </li>
+              ))}
+            </ul>
           )}
+        </section>
 
-          {/* Display Selected Vehicle Information */}
-          {selectedVehicle && (
-            <div className="mt-6">
-              <h3 className="text-xl font-semibold text-gray-700">Selected Vehicle</h3>
-              <p><strong>Name:</strong> {selectedVehicle.name}</p>
-              <p><strong>Description:</strong> {selectedVehicle.description}</p>
-              <p><strong>License Number:</strong> {selectedVehicle.license_number}</p>
-              <p><strong>Driver:</strong> {selectedVehicle.driver_name}</p>
-              {/* Add more details as needed */}
+        {selectedVehicle && (
+          <section className="mb-8">
+            <h2 className="text-2xl mb-4 text-black">
+              File Claim for {selectedVehicle.vehicle_make} {selectedVehicle.vehicle_model} (Chassis: {selectedVehicle.chassis_number})
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <input
+                type="date"
+                name="accident_date"
+                value={formData.accident_date}
+                onChange={handleChange}
+                placeholder="Accident Date"
+                required
+                className="block w-full p-2 border rounded"
+              />
+              <input
+                type="text"
+                name="accident_location"
+                value={formData.accident_location}
+                onChange={handleChange}
+                placeholder="Accident Location"
+                required
+                className="block w-full p-2 border rounded"
+              />
+              <input
+                type="text"
+                name="police_report_number"
+                value={formData.police_report_number}
+                onChange={handleChange}
+                placeholder="Police Report Number"
+                required
+                className="block w-full p-2 border rounded"
+              />
               <button
-                className="mt-4 w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
-                onClick={() => alert("Proceed to file the claim")}
+                type="submit"
+                className="w-full bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition"
               >
-                File Claim on this Vehicle
+                Submit Claim
               </button>
-            </div>
-          )}
-        </div>
+            </form>
+          </section>
+        )}
       </main>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };
